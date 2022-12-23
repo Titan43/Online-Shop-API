@@ -1,30 +1,42 @@
 package com.marketplace.user;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table
 public class User {
+
+    @Id
+    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+                    generator = "user_sequence"
+    )
     private Long id;
     private String fName;
     private String sName;
     private LocalDate dob;
     private String phoneNumber;
+    @Enumerated(EnumType.ORDINAL)
+    private UserRole role;
 
-    public User(Long id, String fName, String sName, LocalDate dob, String phoneNumber) {
+    public User() {}
+
+    public User(Long id, String fName, String sName, LocalDate dob, String phoneNumber, UserRole role) {
         this.id = id;
         this.fName = fName;
         this.sName = sName;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
+        this.role = role;
     }
 
-    public User(String fName, String sName, LocalDate dob, String phoneNumber) {
+    public User(String fName, String sName, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;
         this.sName = sName;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
-    }
-
-    public User() {
+        this.role = role;
     }
 
     public Long getId() {
@@ -47,6 +59,10 @@ public class User {
         return phoneNumber;
     }
 
+    public UserRole getRole() {
+        return role;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -65,6 +81,10 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override
