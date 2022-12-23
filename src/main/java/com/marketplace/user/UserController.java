@@ -1,10 +1,10 @@
 package com.marketplace.user;
 
+import com.marketplace.user.userService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,4 +24,9 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED, reason = "User was successfully created(CODE 201)")
+    public void registerNewUser(@RequestBody User user){
+        userService.addNewUser(user);
+    }
 }

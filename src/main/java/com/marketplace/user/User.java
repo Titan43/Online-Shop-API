@@ -15,6 +15,7 @@ public class User {
     private Long id;
     private String fName;
     private String sName;
+    private String email;
     private LocalDate dob;
     private String phoneNumber;
     @Enumerated(EnumType.ORDINAL)
@@ -22,18 +23,20 @@ public class User {
 
     public User() {}
 
-    public User(Long id, String fName, String sName, LocalDate dob, String phoneNumber, UserRole role) {
-        this.id = id;
+    public User(String fName, String sName, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;
         this.sName = sName;
+        this.email = email;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }
 
-    public User(String fName, String sName, LocalDate dob, String phoneNumber, UserRole role) {
+    public User(Long id, String fName, String sName, String email, LocalDate dob, String phoneNumber, UserRole role) {
+        this.id = id;
         this.fName = fName;
         this.sName = sName;
+        this.email = email;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
         this.role = role;
@@ -85,6 +88,14 @@ public class User {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
