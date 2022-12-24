@@ -15,6 +15,7 @@ public class ValidatorService implements IValidatorService{
 
     private Pattern emailPattern = null;
     private Pattern phoneNumberPattern = null;
+    private Pattern idPattern = null;
 
     public Pattern getEmailPattern() {
         if(emailPattern == null){
@@ -30,6 +31,14 @@ public class ValidatorService implements IValidatorService{
         }
 
         return phoneNumberPattern;
+    }
+
+    public Pattern getIdPattern() {
+        if(idPattern == null){
+            idPattern = Pattern.compile(ID_REGEX);
+        }
+
+        return idPattern;
     }
 
     @Override
@@ -56,6 +65,16 @@ public class ValidatorService implements IValidatorService{
     public boolean ageIsValid(LocalDate dob) {
         if(dob != null){
             return Period.between(dob, LocalDate.now()).getYears() >= VALID_AGE;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean idIsValid(String id) {
+        if(id != null){
+            if(!id.strip().equals("")){
+                return getIdPattern().matcher(id).matches();
+            }
         }
         return false;
     }

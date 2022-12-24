@@ -56,4 +56,16 @@ public class UserService implements IUserService{
 
         userRepository.save(user);
     }
+
+    @Override
+    public void deleteUser(String id) {
+        if(!validatorService.idIsValid(id)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserID has to be provided (CODE 400)");
+        }
+        Long userId = Long.parseLong(id);
+        if(!userRepository.existsById(userId))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
+
+        userRepository.deleteById(userId);
+    }
 }

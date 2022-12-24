@@ -6,4 +6,5 @@ public interface IValidatorService {
     boolean emailIsValid(String email);
     boolean phoneNumberIsValid(String phoneNumber);
     boolean ageIsValid(LocalDate dob);
+    boolean idIsValid(String id);
 }

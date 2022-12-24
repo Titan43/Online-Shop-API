@@ -29,4 +29,10 @@ public class UserController {
     public void registerNewUser(@RequestBody User user){
         userService.addNewUser(user);
     }
+
+    @DeleteMapping(path = "{userID}")
+    @ResponseStatus(code = HttpStatus.OK, reason = "User was successfully deleted(CODE 200)")
+    public void deleteUser(@PathVariable("userID") String id){
+        userService.deleteUser(id);
+    }
 }
