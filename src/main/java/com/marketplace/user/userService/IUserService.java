@@ -2,10 +2,10 @@ package com.marketplace.user.userService;
 
 import com.marketplace.user.User;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
-    List<User> getUsers();
     void addNewUser(User user);
     void deleteUser(String id);
+    Optional<User> getUser(String id);
 }

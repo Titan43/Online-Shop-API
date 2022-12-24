@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Qualifier("firstImplementation")
@@ -25,11 +25,6 @@ public class UserService implements IUserService{
     public UserService(UserRepository userRepository, ValidatorService validatorService) {
         this.userRepository = userRepository;
         this.validatorService = validatorService;
-    }
-
-    @Override
-    public List<User> getUsers(){
-        return userRepository.findAll();
     }
 
     @Override
@@ -67,5 +62,17 @@ public class UserService implements IUserService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public Optional<User> getUser(String id) {
+        if(!validatorService.idIsValid(id)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserID has to be provided (CODE 400)");
+        }
+        Long userId = Long.parseLong(id);
+        if(!userRepository.existsById(userId))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
+
+        return userRepository.findById(userId);
     }
 }
