@@ -1,11 +1,12 @@
 package com.marketplace.user;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
 @Table
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO
@@ -14,6 +15,7 @@ public class User {
     private String fName;
     private String sName;
     private String username;
+    private String password;
     private String email;
     private LocalDate dob;
     private String phoneNumber;
@@ -23,21 +25,23 @@ public class User {
     public User() {
     }
 
-    public User(String fName, String sName, String username, String email, LocalDate dob, String phoneNumber, UserRole role) {
+    public User(String fName, String sName, String username, String password, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;
         this.sName = sName;
         this.username = username;
+        this.password = password;
         this.email = email;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }
 
-    public User(Long id, String fName, String sName, String username, String email, LocalDate dob, String phoneNumber, UserRole role) {
+    public User(Long id, String fName, String sName, String username, String password, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.id = id;
         this.fName = fName;
         this.sName = sName;
         this.username = username;
+        this.password = password;
         this.email = email;
         this.dob = dob;
         this.phoneNumber = phoneNumber;
@@ -106,6 +110,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

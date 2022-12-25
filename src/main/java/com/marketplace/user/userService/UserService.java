@@ -28,7 +28,6 @@ public class UserService implements IUserService{
         this.validatorService = validatorService;
     }
 
-
     @Override
     public void addNewUser(User user) {
 
@@ -89,7 +88,9 @@ public class UserService implements IUserService{
         if(user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
-        return user.get();
+        User userToReturn = user.get();
+        userToReturn.setPassword(null);
+        return userToReturn;
     }
 
     @Override

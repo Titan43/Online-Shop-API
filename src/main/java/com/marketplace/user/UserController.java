@@ -1,23 +1,22 @@
 package com.marketplace.user;
-
+import com.marketplace.security.JwtUtil;
 import com.marketplace.user.userService.IUserService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path="api/v1/user")
 public class UserController {
 
     private final IUserService userService;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(@Qualifier("firstImplementation") IUserService userService) {
+    public UserController(IUserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
