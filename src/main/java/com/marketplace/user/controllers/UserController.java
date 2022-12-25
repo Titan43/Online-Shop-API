@@ -1,5 +1,6 @@
-package com.marketplace.user;
+package com.marketplace.user.controllers;
 import com.marketplace.security.JwtUtil;
+import com.marketplace.user.User;
 import com.marketplace.user.userService.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,12 +12,10 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final IUserService userService;
-    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserController(IUserService userService, JwtUtil jwtUtil) {
+    public UserController(IUserService userService) {
         this.userService = userService;
-        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -40,13 +39,6 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK, reason = "User was successfully updated(CODE 200)")
     public void updateUser(@RequestParam String username, @RequestBody User user){
         userService.updateUser(username, user);
-    }
-
-    @PostMapping(path = "/login")
-    public void login(){
-    }
-    @GetMapping(path = "/logout")
-    public void logout(){
     }
 
 }
