@@ -1,4 +1,4 @@
-package com.marketplace.user.validator;
+package com.marketplace.validator;
 
 public interface IValidatorConstants {
 

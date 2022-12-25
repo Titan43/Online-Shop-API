@@ -8,4 +8,5 @@ public interface IUserService {
     void addNewUser(User user);
     void deleteUser(String id);
     Optional<User> getUser(String id);
+    void updateUser(String email, User user);
 }

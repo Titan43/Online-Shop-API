@@ -1,4 +1,4 @@
-package com.marketplace.user.validator;
+package com.marketplace.validator;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.regex.Pattern;
-
-import static com.marketplace.user.validator.IValidatorConstants.*;
 
 @Service
 @Qualifier("firstImplementation")
@@ -19,7 +17,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getEmailPattern() {
         if(emailPattern == null){
-            emailPattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+            emailPattern = Pattern.compile(IValidatorConstants.EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
         }
 
         return emailPattern;
@@ -27,7 +25,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getPhoneNumberPattern() {
         if(phoneNumberPattern == null){
-            phoneNumberPattern = Pattern.compile(PHONE_NUMBER_REGEX, Pattern.CASE_INSENSITIVE);
+            phoneNumberPattern = Pattern.compile(IValidatorConstants.PHONE_NUMBER_REGEX, Pattern.CASE_INSENSITIVE);
         }
 
         return phoneNumberPattern;
@@ -35,7 +33,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getIdPattern() {
         if(idPattern == null){
-            idPattern = Pattern.compile(ID_REGEX);
+            idPattern = Pattern.compile(IValidatorConstants.ID_REGEX);
         }
 
         return idPattern;
@@ -64,7 +62,7 @@ public class ValidatorService implements IValidatorService{
     @Override
     public boolean ageIsValid(LocalDate dob) {
         if(dob != null){
-            return Period.between(dob, LocalDate.now()).getYears() >= VALID_AGE;
+            return Period.between(dob, LocalDate.now()).getYears() >= IValidatorConstants.VALID_AGE;
         }
         return false;
     }
