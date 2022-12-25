@@ -30,17 +30,17 @@ public class UserService implements IUserService{
     @Override
     public void addNewUser(User user) {
 
-        if(!validatorService.emailIsValid(user.getEmail()))
+        if(validatorService.emailIsNotValid(user.getEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email (CODE 400)");
 
-        else if(!validatorService.phoneNumberIsValid(user.getPhoneNumber()))
+        else if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number (CODE 400)");
 
         else if (userRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "User with such email already exists (CODE 400)");
 
-        else if(!validatorService.ageIsValid(user.getDob()))
+        else if(validatorService.ageIsNotValid(user.getDob()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid date of birth entered. You should be at least " +
                     IValidatorConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
@@ -61,7 +61,7 @@ public class UserService implements IUserService{
 
     @Override
     public void deleteUser(String email) {
-        if(!validatorService.emailIsValid(email)){
+        if(validatorService.emailIsNotValid(email)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email has to be provided (CODE 400)");
         }
         Optional<User> user = userRepository.findUserByEmail(email);
@@ -73,7 +73,7 @@ public class UserService implements IUserService{
 
     @Override
     public Optional<User> getUser(String email) {
-        if(!validatorService.emailIsValid(email)){
+        if(validatorService.emailIsNotValid(email)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email has to be provided (CODE 400)");
         }
         Optional<User> user = userRepository.findUserByEmail(email);
@@ -100,14 +100,14 @@ public class UserService implements IUserService{
         }
 
         if(user.getDob() != null){
-            if(!validatorService.ageIsValid(user.getDob()))
+            if(validatorService.ageIsNotValid(user.getDob()))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Invalid date of birth entered. You should be at least " +
                                 IValidatorConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
             oldUserData.setDob(user.getDob());
         }
         if(user.getPhoneNumber()!= null){
-            if(!validatorService.phoneNumberIsValid(user.getPhoneNumber()))
+            if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber()))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number (CODE 400)");
             oldUserData.setPhoneNumber(user.getPhoneNumber());
         }
