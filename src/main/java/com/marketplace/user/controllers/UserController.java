@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping(path="api/v1/user")
 public class UserController {
@@ -19,11 +21,11 @@ public class UserController {
     }
 
     @GetMapping
-    public User getUser(@RequestParam String username){
-        return userService.getUser(username);
+    public User getUser(@RequestParam String username, Principal principal){
+        return userService.getUser(username, principal);
     }
 
-    @PostMapping
+    @PostMapping(path = "/register")
     @ResponseStatus(code = HttpStatus.CREATED, reason = "User was successfully created(CODE 201)")
     public void registerNewUser(@RequestBody User user){
         userService.addNewUser(user);
@@ -31,14 +33,14 @@ public class UserController {
 
     @DeleteMapping
     @ResponseStatus(code = HttpStatus.OK, reason = "User was successfully deleted(CODE 200)")
-    public void deleteUser(@RequestParam String username){
-        userService.deleteUser(username);
+    public void deleteUser(@RequestParam String username, Principal principal){
+        userService.deleteUser(username, principal);
     }
 
     @PutMapping
     @ResponseStatus(code = HttpStatus.OK, reason = "User was successfully updated(CODE 200)")
-    public void updateUser(@RequestParam String username, @RequestBody User user){
-        userService.updateUser(username, user);
+    public void updateUser(@RequestParam String username, @RequestBody User user, Principal principal){
+        userService.updateUser(username, user, principal);
     }
 
 }

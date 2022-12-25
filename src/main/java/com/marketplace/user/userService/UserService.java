@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -68,8 +69,10 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public void deleteUser(String username) {
-        if(validatorService.usernameIsNotValid(username)){
+    public void deleteUser(String username, Principal principal) {
+        if(!principal.getName().equals(username))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Yor token is not valid for this user(CODE 403)");
+        else if(validatorService.usernameIsNotValid(username)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username has to be provided (CODE 400)");
         }
         Optional<User> user = userRepository.findUserByUsername(username);
@@ -80,27 +83,28 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User getUser(String username) {
-        if(validatorService.usernameIsNotValid(username)){
+    public User getUser(String username, Principal principal) {
+        if(!principal.getName().equals(username))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Yor token is not valid for this user(CODE 403)");
+        else if(validatorService.usernameIsNotValid(username)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username has to be provided (CODE 400)");
         }
         Optional<User> user = userRepository.findUserByUsername(username);
         if(user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
-        User userToReturn = user.get();
-        userToReturn.setPassword(null);
-        return userToReturn;
+        return user.get();
     }
 
     @Override
-    public void updateUser(String username, User user) {
-        System.out.println(user);
-        if(user.toString().equals(new User().toString()))
+    public void updateUser(String username, User user, Principal principal) {
+        if(!principal.getName().equals(username))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Yor token is not valid for this user(CODE 403)");
+        else if(user.toString().equals(new User().toString()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "No data to update or wrong fields passed(CODE 400)");
 
-        User oldUserData = getUser(username);
+        User oldUserData = getUser(username, principal);
         if(user.getId() != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserId cannot be changed(CODE 400)");
         }
