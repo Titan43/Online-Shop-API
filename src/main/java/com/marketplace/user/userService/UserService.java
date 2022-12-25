@@ -3,7 +3,7 @@ package com.marketplace.user.userService;
 import com.marketplace.user.User;
 import com.marketplace.user.UserRepository;
 import com.marketplace.user.UserRole;
-import com.marketplace.validator.IValidatorConstants;
+import com.marketplace.constants.IAPIConstants;
 import com.marketplace.validator.IValidatorService;
 import com.marketplace.validator.ValidatorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class UserService implements IUserService{
         else if(validatorService.ageIsNotValid(user.getDob()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid date of birth entered. You should be at least " +
-                    IValidatorConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
+                    IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
 
         else if(user.getRole() == null){
             user.setRole(UserRole.BUYER);
@@ -122,7 +122,7 @@ public class UserService implements IUserService{
             if(validatorService.ageIsNotValid(user.getDob()))
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Invalid date of birth entered. You should be at least " +
-                                IValidatorConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
+                                IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
             oldUserData.setDob(user.getDob());
         }
         if(user.getPhoneNumber()!= null){

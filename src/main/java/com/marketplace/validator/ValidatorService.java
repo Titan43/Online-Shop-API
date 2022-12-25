@@ -1,5 +1,6 @@
 package com.marketplace.validator;
 
+import com.marketplace.constants.IAPIConstants;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getEmailPattern() {
         if(emailPattern == null){
-            emailPattern = Pattern.compile(IValidatorConstants.EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+            emailPattern = Pattern.compile(IAPIConstants.EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
         }
 
         return emailPattern;
@@ -26,7 +27,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getUsernamePattern() {
         if(usernamePattern == null){
-            usernamePattern = Pattern.compile(IValidatorConstants.USERNAME_REGEX, Pattern.CASE_INSENSITIVE);
+            usernamePattern = Pattern.compile(IAPIConstants.USERNAME_REGEX, Pattern.CASE_INSENSITIVE);
         }
 
         return usernamePattern;
@@ -34,7 +35,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getPhoneNumberPattern() {
         if(phoneNumberPattern == null){
-            phoneNumberPattern = Pattern.compile(IValidatorConstants.PHONE_NUMBER_REGEX, Pattern.CASE_INSENSITIVE);
+            phoneNumberPattern = Pattern.compile(IAPIConstants.PHONE_NUMBER_REGEX, Pattern.CASE_INSENSITIVE);
         }
 
         return phoneNumberPattern;
@@ -42,7 +43,7 @@ public class ValidatorService implements IValidatorService{
 
     public Pattern getIdPattern() {
         if(idPattern == null){
-            idPattern = Pattern.compile(IValidatorConstants.ID_REGEX);
+            idPattern = Pattern.compile(IAPIConstants.ID_REGEX);
         }
 
         return idPattern;
@@ -81,7 +82,7 @@ public class ValidatorService implements IValidatorService{
     @Override
     public boolean ageIsNotValid(LocalDate dob) {
         if(dob != null){
-            return Period.between(dob, LocalDate.now()).getYears() < IValidatorConstants.VALID_AGE;
+            return Period.between(dob, LocalDate.now()).getYears() < IAPIConstants.VALID_AGE;
         }
         return true;
     }
