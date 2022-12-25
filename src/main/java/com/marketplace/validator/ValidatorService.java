@@ -40,31 +40,31 @@ public class ValidatorService implements IValidatorService{
     }
 
     @Override
-    public boolean emailIsValid(String email){
+    public boolean emailIsNotValid(String email){
         if(email != null){
             if(!email.strip().equals("")){
-                return getEmailPattern().matcher(email).matches();
+                return !getEmailPattern().matcher(email).matches();
             }
         }
-        return false;
+        return true;
     }
 
     @Override
-    public boolean phoneNumberIsValid(String phoneNumber) {
+    public boolean phoneNumberIsNotValid(String phoneNumber) {
         if(phoneNumber != null){
             if(!phoneNumber.strip().equals("")){
-                return getPhoneNumberPattern().matcher(phoneNumber).matches();
+                return !getPhoneNumberPattern().matcher(phoneNumber).matches();
             }
         }
-        return false;
+        return true;
     }
 
     @Override
-    public boolean ageIsValid(LocalDate dob) {
+    public boolean ageIsNotValid(LocalDate dob) {
         if(dob != null){
-            return Period.between(dob, LocalDate.now()).getYears() >= IValidatorConstants.VALID_AGE;
+            return Period.between(dob, LocalDate.now()).getYears() < IValidatorConstants.VALID_AGE;
         }
-        return false;
+        return true;
     }
 
     @Override

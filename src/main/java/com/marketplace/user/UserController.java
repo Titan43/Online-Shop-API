@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Optional<User> getUser(@RequestParam String email){
+    public User getUser(@RequestParam String email){
         return userService.getUser(email);
     }
 
