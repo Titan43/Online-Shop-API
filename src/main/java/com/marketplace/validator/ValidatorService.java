@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 public class ValidatorService implements IValidatorService{
 
     private Pattern emailPattern = null;
+    private Pattern usernamePattern = null;
     private Pattern phoneNumberPattern = null;
     private Pattern idPattern = null;
 
@@ -21,6 +22,14 @@ public class ValidatorService implements IValidatorService{
         }
 
         return emailPattern;
+    }
+
+    public Pattern getUsernamePattern() {
+        if(usernamePattern == null){
+            usernamePattern = Pattern.compile(IValidatorConstants.USERNAME_REGEX, Pattern.CASE_INSENSITIVE);
+        }
+
+        return usernamePattern;
     }
 
     public Pattern getPhoneNumberPattern() {
@@ -44,6 +53,16 @@ public class ValidatorService implements IValidatorService{
         if(email != null){
             if(!email.strip().equals("")){
                 return !getEmailPattern().matcher(email).matches();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean usernameIsNotValid(String username) {
+        if(username != null){
+            if(!username.strip().equals("")){
+                return !getUsernamePattern().matcher(username).matches();
             }
         }
         return true;

@@ -21,8 +21,8 @@ public class UserController {
     }
 
     @GetMapping
-    public User getUser(@RequestParam String email){
-        return userService.getUser(email);
+    public User getUser(@RequestParam String username){
+        return userService.getUser(username);
     }
 
     @PostMapping
@@ -33,13 +33,21 @@ public class UserController {
 
     @DeleteMapping
     @ResponseStatus(code = HttpStatus.OK, reason = "User was successfully deleted(CODE 200)")
-    public void deleteUser(@RequestParam String email){
-        userService.deleteUser(email);
+    public void deleteUser(@RequestParam String username){
+        userService.deleteUser(username);
     }
 
     @PutMapping
     @ResponseStatus(code = HttpStatus.OK, reason = "User was successfully updated(CODE 200)")
-    public void updateUser(@RequestParam String email, @RequestBody User user){
-        userService.updateUser(email, user);
+    public void updateUser(@RequestParam String username, @RequestBody User user){
+        userService.updateUser(username, user);
     }
+
+    @PostMapping(path = "/login")
+    public void login(){
+    }
+    @GetMapping(path = "/logout")
+    public void logout(){
+    }
+
 }

@@ -22,19 +22,28 @@ public class UserService implements IUserService{
     private final IValidatorService validatorService;
 
     @Autowired
-    public UserService(UserRepository userRepository, ValidatorService validatorService) {
+    public UserService(UserRepository userRepository,
+                       @Qualifier("firstImplementation") ValidatorService validatorService) {
         this.userRepository = userRepository;
         this.validatorService = validatorService;
     }
 
+
     @Override
     public void addNewUser(User user) {
 
-        if(validatorService.emailIsNotValid(user.getEmail()))
+        if(validatorService.usernameIsNotValid(user.getUsername())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid username (CODE 400)");
+        }
+        else if(validatorService.emailIsNotValid(user.getEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email (CODE 400)");
 
         else if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number (CODE 400)");
+
+        else if (userRepository.findUserByUsername(user.getUsername()).isPresent())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "User with such username already exists (CODE 400)");
 
         else if (userRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -60,11 +69,11 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public void deleteUser(String email) {
-        if(validatorService.emailIsNotValid(email)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email has to be provided (CODE 400)");
+    public void deleteUser(String username) {
+        if(validatorService.usernameIsNotValid(username)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username has to be provided (CODE 400)");
         }
-        Optional<User> user = userRepository.findUserByEmail(email);
+        Optional<User> user = userRepository.findUserByUsername(username);
         if(user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
@@ -72,11 +81,11 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User getUser(String email) {
-        if(validatorService.emailIsNotValid(email)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email has to be provided (CODE 400)");
+    public User getUser(String username) {
+        if(validatorService.usernameIsNotValid(username)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username has to be provided (CODE 400)");
         }
-        Optional<User> user = userRepository.findUserByEmail(email);
+        Optional<User> user = userRepository.findUserByUsername(username);
         if(user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
@@ -84,14 +93,18 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public void updateUser(String email, User user) {
+    public void updateUser(String username, User user) {
+        System.out.println(user);
         if(user.toString().equals(new User().toString()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "No data to update or wrong fields passed(CODE 400)");
 
-        User oldUserData = getUser(email);
+        User oldUserData = getUser(username);
         if(user.getId() != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserId cannot be changed(CODE 400)");
+        }
+        else if(user.getUsername()!=null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be changed(CODE 400)");
         }
         else if(user.getEmail()!=null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email cannot be changed(CODE 400)");
@@ -119,5 +132,4 @@ public class UserService implements IUserService{
 
         userRepository.save(oldUserData);
     }
-
 }
