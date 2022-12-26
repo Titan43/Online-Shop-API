@@ -56,7 +56,7 @@ public class SecurityConfig{
                 .and()
                 .formLogin().disable()
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
