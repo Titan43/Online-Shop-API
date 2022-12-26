@@ -82,30 +82,30 @@ public class UserService implements IUserService{
 
     @Override
     public ResponseEntity<?> getUser(String username, Principal principal) {
-        if(!principal.getName().equals(username))
-            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
-        else if(validatorService.usernameIsNotValid(username)){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(validatorService.usernameIsNotValid(username)){
+            return new ResponseEntity<>("Invalid username(CODE 400)", HttpStatus.BAD_REQUEST);
         }
         Optional<User> user = userRepository.findUserByUsername(username);
         if(user.isEmpty())
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User not found (CODE 404)", HttpStatus.NOT_FOUND);
+        else if(!principal.getName().equals(username))
+            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
 
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> updateUser(String username, User user, Principal principal) {
-        if(!principal.getName().equals(username)) {
-            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
-        }
-        else if(user.toString().equals(new User().toString())) {
+        if(user.toString().equals(new User().toString())) {
             return new ResponseEntity<>( "No data to update or wrong fields passed(CODE 400)",HttpStatus.BAD_REQUEST);
         }
         ResponseEntity<?> oldUser = getUser(username, principal);
-        if(!oldUser.hasBody() || oldUser.getBody() ==null)
-            return new ResponseEntity<>( "Such user does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        if(oldUser.getStatusCode() != HttpStatus.OK)
+            return new ResponseEntity<>((String)oldUser.getBody(), oldUser.getStatusCode());
         User oldUserData = (User) oldUser.getBody();
+        if(oldUserData == null){
+            throw new IllegalStateException("Something went wrong");
+        }
         if(user.getId() != null){
             return new ResponseEntity<>("UserId cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
