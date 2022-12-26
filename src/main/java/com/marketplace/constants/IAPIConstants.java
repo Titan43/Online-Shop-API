@@ -10,4 +10,6 @@ public interface IAPIConstants {
     String SECRET_KEY = "secret-token";
     long TOKEN_LIFETIME = 1000 * 60 * 60 * 2;
     String API_PREFIX = "api/v1/";
+    String AUTH_PATH = "/"+API_PREFIX+"auth/authenticate";
+    String REGISTER_PATH = "/"+API_PREFIX+"user/register";
 }

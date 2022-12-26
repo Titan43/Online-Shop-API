@@ -18,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.marketplace.constants.IAPIConstants.*;
+
 @Component
 @AllArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -37,22 +39,35 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String username;
         final String jwtToken;
 
-        if(authHeader == null || !authHeader.startsWith("Bearer")){
+        if(request.getServletPath().equals(AUTH_PATH)
+            ||  request.getServletPath().equals(REGISTER_PATH)) {
             filterChain.doFilter(request, response);
+            return;
+        }
+
+        if(authHeader == null || !authHeader.startsWith("Bearer")){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
         jwtToken = authHeader.substring(7);
         username = jwtUtil.extractUsername(jwtToken);
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            final boolean isTokenValid = jwtUtil.validateToken(jwtToken, userDetails);
-            if(isTokenValid){
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            boolean isTokenValid;
+            try {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                isTokenValid = jwtUtil.validateToken(jwtToken, userDetails);
+                if (isTokenValid) {
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+            catch (UsernameNotFoundException e){
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
         filterChain.doFilter(request, response);
