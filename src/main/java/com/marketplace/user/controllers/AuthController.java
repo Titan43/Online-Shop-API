@@ -5,6 +5,7 @@ import com.marketplace.security.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,15 +31,14 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/authenticate")
-    public String authenticate(@RequestBody AuthRequest request){
+    public ResponseEntity<String> authenticate(@RequestBody AuthRequest request){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
         final UserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
         if(user != null){
-            return jwtUtil.generateToken(user);
+            return new ResponseEntity<>(jwtUtil.generateToken(user), HttpStatus.OK);
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something went wrong (CODE 400)");
+        return new ResponseEntity<>( "Such user does not exist(CODE 404)", HttpStatus.NOT_FOUND);
     }
-
 }

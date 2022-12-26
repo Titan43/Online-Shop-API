@@ -42,7 +42,7 @@ public class SecurityConfig{
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/"+API_PREFIX+"auth/**")
+                .requestMatchers("/"+API_PREFIX+"auth/*")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
@@ -54,6 +54,7 @@ public class SecurityConfig{
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .formLogin().disable()
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

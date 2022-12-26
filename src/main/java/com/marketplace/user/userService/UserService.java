@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,28 +30,25 @@ public class UserService implements IUserService{
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void addNewUser(User user) {
+    public ResponseEntity<String> addNewUser(User user) {
         if(validatorService.usernameIsNotValid(user.getUsername())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid username (CODE 400)");
+            return new ResponseEntity<>("Invalid username (CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(validatorService.emailIsNotValid(user.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email (CODE 400)");
+            return new ResponseEntity<>("Invalid email (CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number (CODE 400)");
+            return new ResponseEntity<>("Invalid phone number (CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if (userRepository.findUserByUsername(user.getUsername()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "User with such username already exists (CODE 400)");
+            return new ResponseEntity<>("User with such username already exists (CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if (userRepository.findUserByEmail(user.getEmail()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "User with such email already exists (CODE 400)");
+            return new ResponseEntity<>( "User with such email already exists (CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(validatorService.ageIsNotValid(user.getDob())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid date of birth entered. You should be at least " +
-                            IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
+            return new ResponseEntity<>( "Invalid date of birth entered. You should be at least " +
+                    IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(user.getRole() == null){
             user.setRole(UserRole.BUYER);
@@ -64,12 +62,13 @@ public class UserService implements IUserService{
         }
 
         userRepository.save(user);
+        return new ResponseEntity<>("User was successfully created(CODE 201)",HttpStatus.CREATED);
     }
 
     @Override
-    public void deleteUser(String username, Principal principal) {
+    public ResponseEntity<String> deleteUser(String username, Principal principal) {
         if(!principal.getName().equals(username))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Yor token is not valid for this user(CODE 403)");
+            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
         else if(validatorService.usernameIsNotValid(username)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username has to be provided (CODE 400)");
         }
@@ -78,55 +77,57 @@ public class UserService implements IUserService{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
         userRepository.deleteById(user.get().getId());
+        return new ResponseEntity<>("User deleted successfully(CODE 200)", HttpStatus.OK);
     }
 
     @Override
-    public User getUser(String username, Principal principal) {
+    public ResponseEntity<?> getUser(String username, Principal principal) {
         if(!principal.getName().equals(username))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Yor token is not valid for this user(CODE 403)");
+            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
         else if(validatorService.usernameIsNotValid(username)){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username has to be provided (CODE 400)");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Optional<User> user = userRepository.findUserByUsername(username);
         if(user.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return user.get();
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
     @Override
-    public void updateUser(String username, User user, Principal principal) {
+    public ResponseEntity<String> updateUser(String username, User user, Principal principal) {
         if(!principal.getName().equals(username)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Yor token is not valid for this user(CODE 403)");
+            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
         }
         else if(user.toString().equals(new User().toString())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "No data to update or wrong fields passed(CODE 400)");
+            return new ResponseEntity<>( "No data to update or wrong fields passed(CODE 400)",HttpStatus.BAD_REQUEST);
         }
-        User oldUserData = getUser(username, principal);
+        ResponseEntity<?> oldUser = getUser(username, principal);
+        if(!oldUser.hasBody() || oldUser.getBody() ==null)
+            return new ResponseEntity<>( "Such user does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        User oldUserData = (User) oldUser.getBody();
         if(user.getId() != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "UserId cannot be changed(CODE 400)");
+            return new ResponseEntity<>("UserId cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(user.getUsername()!=null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username cannot be changed(CODE 400)");
+            return new ResponseEntity<>("Username cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(user.getEmail()!=null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User email cannot be changed(CODE 400)");
+            return new ResponseEntity<>( "User email cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(user.getRole() != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User role cannot be changed(CODE 400)");
+            return new ResponseEntity<>("User role cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
         if(user.getDob() != null){
             if(validatorService.ageIsNotValid(user.getDob()))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Invalid date of birth entered. You should be at least " +
-                                IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)");
+                return new ResponseEntity<>( "Invalid date of birth entered. You should be at least " +
+                        IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setDob(user.getDob());
         }
         if(user.getPhoneNumber()!= null){
             if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber()))
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid phone number (CODE 400)");
+                return new ResponseEntity<>("Invalid phone number (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setPhoneNumber(user.getPhoneNumber());
         }
         if(user.getFName()!=null)
@@ -137,5 +138,6 @@ public class UserService implements IUserService{
             oldUserData.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userRepository.save(oldUserData);
+        return new ResponseEntity<>("User updated successfully(CODE 200)", HttpStatus.OK);
     }
 }
