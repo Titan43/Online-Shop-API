@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+import static com.marketplace.constants.IAPIConstants.*;
 
 @Configuration
 @AllArgsConstructor
@@ -42,11 +42,11 @@ public class SecurityConfig{
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/"+API_PREFIX+"auth/*")
+                .requestMatchers(AUTH_PATH)
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/"+API_PREFIX+"user/register")
+                .requestMatchers(REGISTER_PATH)
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
