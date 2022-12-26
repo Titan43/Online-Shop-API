@@ -2,6 +2,7 @@ package com.marketplace.user.controllers;
 
 import com.marketplace.security.AuthRequest;
 import com.marketplace.security.JwtUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,20 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+
 @RestController
-@RequestMapping(path="api/v1/auth")
+@AllArgsConstructor
+@RequestMapping(path=API_PREFIX+"auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private final JwtUtil jwtUtil;
-
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-    }
+    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private final UserDetailsService userDetailsService;
+    @Autowired
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/authenticate")
     public String authenticate(@RequestBody AuthRequest request){

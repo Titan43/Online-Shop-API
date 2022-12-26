@@ -3,6 +3,7 @@ package com.marketplace.security;
 import com.marketplace.user.User;
 import com.marketplace.user.UserRepository;
 import com.marketplace.user.UserRole;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -23,29 +24,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+
 @Configuration
+@AllArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig{
 
+    @Autowired
     private final JwtAuthFilter jwtAuthFilter;
-    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService) {
-        this.jwtAuthFilter = jwtAuthFilter;
-        this.userDetailsService = userDetailsService;
-    }
+    private final UserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**")
+                .requestMatchers("/"+API_PREFIX+"auth/**")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/user/register")
+                .requestMatchers("/"+API_PREFIX+"user/register")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()

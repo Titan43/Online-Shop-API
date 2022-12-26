@@ -1,24 +1,22 @@
 package com.marketplace.user.controllers;
-import com.marketplace.security.JwtUtil;
 import com.marketplace.user.User;
 import com.marketplace.user.userService.IUserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+
 @RestController
-@RequestMapping(path="api/v1/user")
+@RequestMapping(path=API_PREFIX+"user")
+@AllArgsConstructor
 public class UserController {
 
-    private final IUserService userService;
-
     @Autowired
-    public UserController(IUserService userService) {
-        this.userService = userService;
-    }
+    private final IUserService userService;
 
     @GetMapping
     public User getUser(@RequestParam String username, Principal principal){

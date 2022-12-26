@@ -9,4 +9,5 @@ public interface IAPIConstants {
     int VALID_AGE = 14;
     String SECRET_KEY = "secret-token";
     long TOKEN_LIFETIME = 1000 * 60 * 60 * 2;
+    String API_PREFIX = "api/v1/";
 }
