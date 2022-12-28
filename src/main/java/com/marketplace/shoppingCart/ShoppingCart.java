@@ -1,10 +1,13 @@
-package com.marketplace.order;
+package com.marketplace.shoppingCart;
 
+import com.marketplace.product.Product;
 import com.marketplace.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @Table
@@ -14,10 +17,9 @@ import lombok.NoArgsConstructor;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long quantity;
-    @Transient
-    private Double price;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+    @OneToMany(mappedBy = "shoppingCart")
+    private Set<OrderedProduct> orderedProducts;
 }

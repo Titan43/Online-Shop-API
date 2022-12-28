@@ -1,10 +1,14 @@
 package com.marketplace.product;
 
+import com.marketplace.shoppingCart.OrderedProduct;
+import com.marketplace.shoppingCart.ShoppingCart;
 import com.marketplace.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
 @Table
@@ -23,6 +27,8 @@ import lombok.NoArgsConstructor;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+    @OneToMany(mappedBy = "product")
+    private Set<OrderedProduct> orderedProducts;
 
     public Product(String name, Double price, Long quantity, String description) {
         this.name = name;

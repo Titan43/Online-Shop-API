@@ -1,12 +1,12 @@
 package com.marketplace.user;
 
-import com.marketplace.order.ShoppingCart;
+import com.marketplace.shoppingCart.ShoppingCart;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -26,7 +26,7 @@ import java.util.List;
     @Enumerated(EnumType.ORDINAL)
     private UserRole role;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Product> products;
+    private Set<Product> products;
     @OneToOne(mappedBy = "user")
     private ShoppingCart shoppingCart;
 
