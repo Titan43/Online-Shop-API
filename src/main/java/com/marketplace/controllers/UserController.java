@@ -1,4 +1,4 @@
-package com.marketplace.user.controllers;
+package com.marketplace.controllers;
 import com.marketplace.user.User;
 import com.marketplace.user.userService.IUserService;
 import lombok.AllArgsConstructor;

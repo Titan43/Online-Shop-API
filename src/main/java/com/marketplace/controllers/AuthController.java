@@ -1,4 +1,4 @@
-package com.marketplace.user.controllers;
+package com.marketplace.controllers;
 
 import com.marketplace.security.AuthRequest;
 import com.marketplace.security.JwtUtil;
