@@ -1,4 +1,4 @@
-package com.marketplace.shoppingCart;
+package com.marketplace.order;
 
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private Long quantity;
-    @Transient
-    private Double price;
-    @ManyToOne
-    private ShoppingCart shoppingCart;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order;
 }
