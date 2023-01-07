@@ -1,6 +1,4 @@
 package com.marketplace.user;
-
-import com.marketplace.order.Order;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,8 +26,6 @@ import java.util.Set;
     private UserRole role;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Product> products = new HashSet<>();
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Order> orders = new HashSet<>();
 
     public User(String fName, String sName, String username, String password, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;
