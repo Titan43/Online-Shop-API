@@ -12,4 +12,5 @@ public interface IAPIConstants {
     String API_PREFIX = "api/v1/";
     String AUTH_PATH = "/"+API_PREFIX+"auth/authenticate";
     String REGISTER_PATH = "/"+API_PREFIX+"user/register";
+    String PRODUCTS_PATH = "/"+API_PREFIX+"product/products";
 }

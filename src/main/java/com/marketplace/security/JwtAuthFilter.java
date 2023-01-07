@@ -50,7 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String username;
         final String jwtToken;
 
-        if(isNotProtectedPath(request.getServletPath(), AUTH_PATH, REGISTER_PATH)) {
+        if(isNotProtectedPath(request.getServletPath(), AUTH_PATH, REGISTER_PATH, PRODUCTS_PATH)) {
             filterChain.doFilter(request, response);
             return;
         }
