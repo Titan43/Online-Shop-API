@@ -29,7 +29,7 @@ import java.util.Set;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Product> products = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<Order> order = new HashSet<>();
+    private Set<Order> orders = new HashSet<>();
 
     public User(String fName, String sName, String username, String password, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;

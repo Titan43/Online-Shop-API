@@ -30,6 +30,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private final JwtUtil jwtUtil;
 
+    private boolean isNotProtectedPath(String path, String... allowedPaths){
+
+        for (String p: allowedPaths) {
+            if(path.equals(p)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -39,8 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String username;
         final String jwtToken;
 
-        if(request.getServletPath().equals(AUTH_PATH)
-            ||  request.getServletPath().equals(REGISTER_PATH)) {
+        if(isNotProtectedPath(request.getServletPath(), AUTH_PATH, REGISTER_PATH)) {
             filterChain.doFilter(request, response);
             return;
         }
