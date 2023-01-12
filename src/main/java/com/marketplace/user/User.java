@@ -1,4 +1,5 @@
 package com.marketplace.user;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +25,7 @@ import java.util.Set;
     private String phoneNumber;
     @Enumerated(EnumType.ORDINAL)
     private UserRole role;
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Product> products = new HashSet<>();
 
