@@ -30,12 +30,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<String> getProduct(@RequestParam String id) {
+    public ResponseEntity<?> getProduct(@RequestParam String id) {
         return productService.getProduct(id);
     }
 
     @GetMapping(path = "/products")
-    public ResponseEntity<String> getProducts(@RequestParam String page, @RequestParam String count) {
+    public ResponseEntity<?> getProducts(@RequestParam String page, @RequestParam String count) {
         return productService.getProducts(page, count);
     }
 }

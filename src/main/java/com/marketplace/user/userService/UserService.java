@@ -1,21 +1,26 @@
 package com.marketplace.user.userService;
 
 import com.marketplace.user.User;
-import com.marketplace.user.UserRepository;
 import com.marketplace.user.UserRole;
 import com.marketplace.constants.IAPIConstants;
 import com.marketplace.validator.IValidatorService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.Optional;
+
+import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+import static com.marketplace.constants.IAPIConstants.ITEM_LINK_START;
 
 @Service
 @Qualifier("firstImplementation")
@@ -62,7 +67,17 @@ public class UserService implements IUserService{
         }
 
         userRepository.save(user);
-        return new ResponseEntity<>("User was successfully created(CODE 201)",HttpStatus.CREATED);
+        URI location = ServletUriComponentsBuilder
+                .fromPath(ITEM_LINK_START+API_PREFIX+"user")
+                .queryParam("username", user.getUsername())
+                .build()
+                .toUri();
+        System.out.println(location);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(location);
+
+        return new ResponseEntity<>("User was successfully created(CODE 201)", headers, HttpStatus.CREATED);
     }
 
     @Override

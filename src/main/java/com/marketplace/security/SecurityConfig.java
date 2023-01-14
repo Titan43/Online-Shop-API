@@ -1,7 +1,7 @@
 package com.marketplace.security;
 
 import com.marketplace.user.User;
-import com.marketplace.user.UserRepository;
+import com.marketplace.user.userService.UserRepository;
 import com.marketplace.user.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
