@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class ProductService implements IProductService{
@@ -51,10 +52,11 @@ public class ProductService implements IProductService{
                     PageRequest.of(Integer.parseInt(page), Integer.parseInt(count)
                     ));
         }
-        catch (NumberFormatException e){
+        catch (IllegalArgumentException e){
             return new ResponseEntity<>("Invalid entity count or page number passed(CODE 400)",
                     HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(productPage.getContent(), HttpStatus.OK);
+        List<Product> products = productPage.getContent();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }
