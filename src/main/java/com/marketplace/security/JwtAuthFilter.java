@@ -13,10 +13,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcherEditor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.marketplace.constants.IAPIConstants.*;
 
@@ -30,17 +35,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private final JwtUtil jwtUtil;
 
-    private boolean isNotProtectedPath(String path, String... allowedPaths){
-
-        for (String p: allowedPaths) {
-            if(path.equals(p)){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -50,7 +44,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String username;
         final String jwtToken;
 
-        if(isNotProtectedPath(request.getServletPath(), AUTH_PATH, REGISTER_PATH, PRODUCTS_PATH)) {
+        final String method = request.getMethod();
+        final String path = request.getServletPath();
+
+        if(path.contains(AUTH_PATH) ||
+            path.contains(REGISTER_PATH)||
+            path.contains(PRODUCTS_PATH+"/products")||
+                (path.contains(PRODUCTS_PATH)&&method.equals("GET"))){
+
             filterChain.doFilter(request, response);
             return;
         }

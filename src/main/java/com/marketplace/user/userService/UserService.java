@@ -72,7 +72,6 @@ public class UserService implements IUserService{
                 .queryParam("username", user.getUsername())
                 .build()
                 .toUri();
-        System.out.println(location);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);

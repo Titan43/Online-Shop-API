@@ -25,6 +25,12 @@ import lombok.NoArgsConstructor;
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
+    @Transient
+    private Long user_id;
+
+    public Long getUser_id() {
+        return user.getId();
+    }
 
     public Product(String name, Double price, Long quantity, String description, User user) {
         this.name = name;

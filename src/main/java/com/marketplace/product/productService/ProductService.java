@@ -56,6 +56,7 @@ public class ProductService implements IProductService{
             return new ResponseEntity<>("Invalid entity count or page number passed(CODE 400)",
                     HttpStatus.BAD_REQUEST);
         }
+
         List<Product> products = productPage.getContent();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -44,15 +46,13 @@ public class SecurityConfig{
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(AUTH_PATH)
+                .requestMatchers(
+                        AUTH_PATH, REGISTER_PATH,
+                        PRODUCTS_PATH+"/products")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(PRODUCTS_PATH)
-                .permitAll()
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers(REGISTER_PATH)
+                .requestMatchers(HttpMethod.GET, PRODUCTS_PATH)
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
