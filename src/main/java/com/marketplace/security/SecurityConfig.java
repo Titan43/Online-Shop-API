@@ -96,9 +96,10 @@ public class SecurityConfig{
                     "test@email.com",
                     LocalDate.of(2000, 1, 1), "*101#", UserRole.BUYER);
             Product product1 = new Product("testing", 9.99, 10L, "test", testUser);
+            Product product2 = new Product("testing2", 9.99, 10L, "test2", testUser2);
 
             userRepository.saveAll(List.of(testUser, testUser2));
-            productRepository.saveAll(List.of(product1));
+            productRepository.saveAll(List.of(product1, product2));
         };
     }
 }
