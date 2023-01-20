@@ -1,5 +1,6 @@
 package com.marketplace.user.userService;
 
+import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.user.User;
 import com.marketplace.user.UserRole;
 import com.marketplace.constants.IAPIConstants;
@@ -29,6 +30,10 @@ public class UserService implements IUserService{
 
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final ProductRepository productRepository;
+
     @Autowired
     private final IValidatorService validatorService;
     @Autowired
@@ -90,7 +95,11 @@ public class UserService implements IUserService{
         if(user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
+        productRepository.deleteAll(productRepository.findAllByUserId(
+                user.get().getId())
+        );
         userRepository.deleteById(user.get().getId());
+
         return new ResponseEntity<>("User deleted successfully(CODE 200)", HttpStatus.OK);
     }
 

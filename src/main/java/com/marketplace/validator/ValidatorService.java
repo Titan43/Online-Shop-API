@@ -88,12 +88,12 @@ public class ValidatorService implements IValidatorService{
     }
 
     @Override
-    public boolean idIsValid(String id) {
+    public boolean idIsNotValid(String id) {
         if(id != null){
             if(!id.strip().equals("")){
-                return getIdPattern().matcher(id).matches();
+                return !getIdPattern().matcher(id).matches();
             }
         }
-        return false;
+        return true;
     }
 }
