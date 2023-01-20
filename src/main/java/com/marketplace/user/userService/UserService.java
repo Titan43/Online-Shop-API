@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import static com.marketplace.constants.IAPIConstants.API_PREFIX;
@@ -60,9 +63,7 @@ public class UserService implements IUserService{
             return new ResponseEntity<>( "Invalid date of birth entered. You should be at least " +
                     IAPIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)", HttpStatus.BAD_REQUEST);
         }
-        else if(user.getRole() == null){
-            user.setRole(UserRole.BUYER);
-        }
+        user.setRole(UserRole.BUYER);
 
         if(user.getFName()==null){
             user.setFName("");
@@ -139,7 +140,7 @@ public class UserService implements IUserService{
             return new ResponseEntity<>( "User email cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(user.getRole() != null){
-            return new ResponseEntity<>("User role cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("User role cannot be changed by ordinary User(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
         if(user.getDob() != null){
