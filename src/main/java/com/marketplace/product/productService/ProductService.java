@@ -1,5 +1,6 @@
 package com.marketplace.product.productService;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.marketplace.product.Product;
 import com.marketplace.user.User;
 import com.marketplace.user.UserRole;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.marketplace.constants.IAPIConstants.API_PREFIX;
@@ -170,5 +172,61 @@ public class ProductService implements IProductService{
 
         List<Product> products = productPage.getContent();
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> changeProductQuantity(String id, JsonNode quantityJson, Principal principal) {
+        if(validatorService.idIsNotValid(id)){
+            return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+        else if(!quantityJson.has("changeQuantityBy")){
+            return new ResponseEntity<>("changeQuantityBy field was not passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        JsonNode quantityField = quantityJson.get("changeQuantityBy");
+
+        if(!(quantityField.isLong() || quantityField.isInt())){
+            return new ResponseEntity<>("changeQuantityBy field has to be a number(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        long prodId, prodQuantity = quantityJson.get("changeQuantityBy").asLong();
+        try {
+            prodId = Long.parseLong(id);
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Product> product = productRepository.findById(prodId);
+
+        if(product.isEmpty()){
+            return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        Optional<User> user = userRepository.findById(
+                product.get().getUser_id()
+        );
+
+        if(user.isEmpty()){
+            return new ResponseEntity<>("Owner of this product does not exist (CODE 500)",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if(!user.get().getUsername().equals(principal.getName())){
+            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
+        }
+
+        Product updatedProduct = product.get();
+
+        if(updatedProduct.getQuantity()+prodQuantity<0){
+            updatedProduct.setQuantity(0L);
+        }
+        else{
+            updatedProduct.setQuantity(updatedProduct.getQuantity()+prodQuantity);
+        }
+
+        productRepository.save(updatedProduct);
+
+        return new ResponseEntity<>("Product quantity updated successfully(CODE 200)", HttpStatus.OK);
     }
 }
