@@ -9,15 +9,21 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+
+import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+import static com.marketplace.constants.IAPIConstants.ITEM_LINK_START;
 
 @Service
 @AllArgsConstructor
@@ -56,13 +62,29 @@ public class ProductService implements IProductService{
         product.setUser(seller.get());
 
         if(validatorService.usernameIsNotValid(product.getName())){
-            return null;
+            return new ResponseEntity<>("Invalid product name passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
-        else if(product.getQuantity()<0){
-            return null;
+        else if(product.getPrice()==null || product.getPrice()<0){
+            return new ResponseEntity<>("Invalid price passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+        else if(product.getQuantity() == null || product.getQuantity()<0){
+            return new ResponseEntity<>("Invalid quantity passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+        else if(product.getDescription() == null || product.getDescription().strip().equals("")){
+            return new ResponseEntity<>("Invalid description passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        return null;
+        Product savedProduct = productRepository.save(product);
+        URI location = ServletUriComponentsBuilder
+                .fromPath(ITEM_LINK_START+API_PREFIX+"product")
+                .queryParam("id", savedProduct.getId())
+                .build()
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(location);
+
+        return new ResponseEntity<>("Product was successfully created(CODE 201)", headers, HttpStatus.CREATED);
     }
 
     @Override
