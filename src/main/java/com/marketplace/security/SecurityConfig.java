@@ -1,13 +1,17 @@
 package com.marketplace.security;
 
+import com.marketplace.product.Product;
+import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.user.User;
-import com.marketplace.user.UserRepository;
+import com.marketplace.user.userService.UserRepository;
 import com.marketplace.user.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -42,11 +46,13 @@ public class SecurityConfig{
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(AUTH_PATH)
+                .requestMatchers(
+                        AUTH_PATH, REGISTER_PATH,
+                        PRODUCTS_PATH+"/products")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(REGISTER_PATH)
+                .requestMatchers(HttpMethod.GET, PRODUCTS_PATH)
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
@@ -79,19 +85,21 @@ public class SecurityConfig{
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository userRepository){
+    CommandLineRunner commandLineRunner(UserRepository userRepository, ProductRepository productRepository){
         return args -> {
             User testUser = new User("testName", "testSurname",
                     "testUser", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "testeml@email.com",
-                    LocalDate.of(2000, 1, 1), "*101#", UserRole.BUYER);
+                    LocalDate.of(2000, 1, 1), "*101#", UserRole.TRADER);
             User testUser2 = new User("test2", "test2",
                     "test2", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "test@email.com",
                     LocalDate.of(2000, 1, 1), "*101#", UserRole.BUYER);
-
+            Product product1 = new Product("testing", 9.99, 10L, "test", testUser);
+            Product product2 = new Product("testing2", 9.99, 10L, "test2", testUser);
 
             userRepository.saveAll(List.of(testUser, testUser2));
+            productRepository.saveAll(List.of(product1, product2));
         };
     }
 }

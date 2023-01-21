@@ -1,9 +1,12 @@
 package com.marketplace.user;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -11,8 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Data public class User{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO
-    )
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String fName;
     private String sName;
@@ -23,6 +25,9 @@ import java.time.LocalDate;
     private String phoneNumber;
     @Enumerated(EnumType.ORDINAL)
     private UserRole role;
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private Set<Product> products = new HashSet<>();
 
     public User(String fName, String sName, String username, String password, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;

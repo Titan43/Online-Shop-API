@@ -1,5 +1,6 @@
-package com.marketplace.user;
+package com.marketplace.user.userService;
 
+import com.marketplace.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

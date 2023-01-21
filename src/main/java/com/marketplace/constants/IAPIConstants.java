@@ -2,6 +2,7 @@ package com.marketplace.constants;
 
 public interface IAPIConstants {
 
+    String ITEM_LINK_START = "localhost:8080/";
     String EMAIL_REGEX = "\\w+@\\w+.\\w+$";
     String PHONE_NUMBER_REGEX = "\\+38\\d{10}$";
     String USERNAME_REGEX = "^[a-z0-9_]+$";
@@ -12,4 +13,5 @@ public interface IAPIConstants {
     String API_PREFIX = "api/v1/";
     String AUTH_PATH = "/"+API_PREFIX+"auth/authenticate";
     String REGISTER_PATH = "/"+API_PREFIX+"user/register";
+    String PRODUCTS_PATH = "/"+API_PREFIX+"product";
 }

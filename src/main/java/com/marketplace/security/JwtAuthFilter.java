@@ -39,8 +39,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String username;
         final String jwtToken;
 
-        if(request.getServletPath().equals(AUTH_PATH)
-            ||  request.getServletPath().equals(REGISTER_PATH)) {
+        final String method = request.getMethod();
+        final String path = request.getServletPath();
+
+        if(path.contains(AUTH_PATH) ||
+            path.contains(REGISTER_PATH)||
+            path.contains(PRODUCTS_PATH+"/products")||
+                (path.contains(PRODUCTS_PATH)&&method.equals("GET"))){
+
             filterChain.doFilter(request, response);
             return;
         }
