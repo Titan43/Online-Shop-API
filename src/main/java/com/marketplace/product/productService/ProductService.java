@@ -2,6 +2,7 @@ package com.marketplace.product.productService;
 
 import com.marketplace.product.Product;
 import com.marketplace.user.User;
+import com.marketplace.user.UserRole;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.IValidatorService;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -31,6 +34,34 @@ public class ProductService implements IProductService{
 
     @Override
     public ResponseEntity<String> addNewProduct(Product product, Principal principal) {
+
+        Optional<User> seller = userRepository.findUserByUsername(principal.getName());
+        if (seller.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        Optional<? extends GrantedAuthority> role = SecurityContextHolder.getContext()
+                .getAuthentication().getAuthorities()
+                .stream().findFirst();
+
+        if(role.isEmpty()){
+            return new ResponseEntity<>("User has no role(CODE 401)", HttpStatus.UNAUTHORIZED);
+        }
+
+        UserRole userRole = UserRole.valueOf(role.get().toString());
+        if(!userRole.equals(UserRole.TRADER)){
+            return new ResponseEntity<>("Only Trader is allowed to sell items(CODE 403)", HttpStatus.FORBIDDEN);
+        }
+
+        product.setUser(seller.get());
+
+        if(validatorService.usernameIsNotValid(product.getName())){
+            return null;
+        }
+        else if(product.getQuantity()<0){
+            return null;
+        }
+
         return null;
     }
 

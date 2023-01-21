@@ -90,13 +90,13 @@ public class SecurityConfig{
             User testUser = new User("testName", "testSurname",
                     "testUser", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "testeml@email.com",
-                    LocalDate.of(2000, 1, 1), "*101#", UserRole.BUYER);
+                    LocalDate.of(2000, 1, 1), "*101#", UserRole.TRADER);
             User testUser2 = new User("test2", "test2",
                     "test2", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "test@email.com",
                     LocalDate.of(2000, 1, 1), "*101#", UserRole.BUYER);
             Product product1 = new Product("testing", 9.99, 10L, "test", testUser);
-            Product product2 = new Product("testing2", 9.99, 10L, "test2", testUser2);
+            Product product2 = new Product("testing2", 9.99, 10L, "test2", testUser);
 
             userRepository.saveAll(List.of(testUser, testUser2));
             productRepository.saveAll(List.of(product1, product2));
