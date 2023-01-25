@@ -13,15 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.marketplace.constants.IAPIConstants.API_PREFIX;
@@ -48,17 +45,8 @@ public class ProductService implements IProductService{
             return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
         }
 
-        Optional<? extends GrantedAuthority> role = SecurityContextHolder.getContext()
-                .getAuthentication().getAuthorities()
-                .stream().findFirst();
-
-        if(role.isEmpty()){
-            return new ResponseEntity<>("User has no role(CODE 401)", HttpStatus.UNAUTHORIZED);
-        }
-
-        UserRole userRole = UserRole.valueOf(role.get().toString());
-        if(!userRole.equals(UserRole.TRADER)){
-            return new ResponseEntity<>("Only Trader is allowed to sell items(CODE 403)", HttpStatus.FORBIDDEN);
+        if(!seller.get().getRole().equals(UserRole.VENDOR)){
+            return new ResponseEntity<>("Only Vendor is allowed to provide products(CODE 403)", HttpStatus.FORBIDDEN);
         }
 
         product.setUser(seller.get());

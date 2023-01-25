@@ -1,5 +1,6 @@
 package com.marketplace.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,11 +54,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if(authHeader == null || !authHeader.startsWith("Bearer")){
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT Token is missing or wrong type of AUTH(CODE 401)");
+            response.getWriter().flush();
             return;
         }
 
         jwtToken = authHeader.substring(7);
-        username = jwtUtil.extractUsername(jwtToken);
+        try {
+            username = jwtUtil.extractUsername(jwtToken);
+        }
+        catch (ExpiredJwtException e){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT Token is expired(CODE 401)");
+            response.getWriter().flush();
+            return;
+        }
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             boolean isTokenValid;
             try {
@@ -73,6 +84,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
             catch (UsernameNotFoundException e){
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Owner of this token does not exist(CODE 401)");
+                response.getWriter().flush();
                 return;
             }
         }

@@ -11,7 +11,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -90,7 +89,7 @@ public class SecurityConfig{
             User testUser = new User("testName", "testSurname",
                     "testUser", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "testeml@email.com",
-                    LocalDate.of(2000, 1, 1), "*101#", UserRole.TRADER);
+                    LocalDate.of(2000, 1, 1), "*101#", UserRole.VENDOR);
             User testUser2 = new User("test2", "test2",
                     "test2", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "test@email.com",
