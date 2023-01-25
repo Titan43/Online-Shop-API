@@ -1,5 +1,6 @@
 package com.marketplace.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.marketplace.order.Order;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,6 +29,9 @@ import java.util.Set;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Product> products = new HashSet<>();
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Set<Order> orders = new HashSet<>();
 
     public User(String fName, String sName, String username, String password, String email, LocalDate dob, String phoneNumber, UserRole role) {
         this.fName = fName;

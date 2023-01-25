@@ -24,9 +24,15 @@ import java.util.Set;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
+    @Transient
+    private Long userId;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", orphanRemoval = true)
     private Set<OrderedProduct> orderedProducts = new HashSet<>();
     private Double amount;
     private LocalDate date;
+
+    public Long getUserId() {
+        return user.getId();
+    }
 }

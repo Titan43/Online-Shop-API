@@ -1,11 +1,15 @@
 package com.marketplace.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.marketplace.order.OrderedProduct;
 import com.marketplace.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "product")
@@ -25,6 +29,11 @@ import lombok.NoArgsConstructor;
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @JsonIgnore
     private User user;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    private Set<OrderedProduct> orderedProducts = new HashSet<>();
+
     @Transient
     private Long user_id;
 
