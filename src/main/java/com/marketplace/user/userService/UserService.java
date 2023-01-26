@@ -1,5 +1,6 @@
 package com.marketplace.user.userService;
 
+import com.marketplace.product.Product;
 import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.user.User;
 import com.marketplace.user.UserRole;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import static com.marketplace.constants.IAPIConstants.API_PREFIX;
@@ -93,8 +95,14 @@ public class UserService implements IUserService{
         if(user.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Such user does not exist(CODE 404)");
 
-        productRepository.deleteAll(productRepository.findAllByUserId(
-                user.get().getId())
+        List<Product> userProducts = productRepository.findAllByUserId(user.get().getId());
+        userProducts.forEach(
+                p->{
+                    p.setAvailable(false);
+                    p.setUser(null);
+                });
+        productRepository.saveAll(
+                userProducts
         );
         userRepository.deleteById(user.get().getId());
 

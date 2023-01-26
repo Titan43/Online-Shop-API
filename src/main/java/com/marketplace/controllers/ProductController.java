@@ -37,7 +37,8 @@ public class ProductController {
     }
 
     @GetMapping(path = "/products")
-    public ResponseEntity<?> getProducts(@RequestParam String page, @RequestParam String count) {
+    public ResponseEntity<?> getProducts(@RequestParam String page,
+                                         @RequestParam String count) {
         return productService.getProducts(page, count);
     }
 

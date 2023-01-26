@@ -102,15 +102,17 @@ public class ProductService implements IProductService{
         );
 
         if(user.isEmpty()){
-            return new ResponseEntity<>("Owner of this product does not exist (CODE 500)",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Owner of this product does not exist (CODE 404)",
+                    HttpStatus.NOT_FOUND);
         }
 
         if(!user.get().getUsername().equals(principal.getName())){
             return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
         }
 
-        productRepository.delete(product.get());
+        Product productForDeletion = product.get();
+        productForDeletion.setAvailable(false);
+        productRepository.save(productForDeletion);
 
         return new ResponseEntity<>("Product deleted successfully(CODE 200)", HttpStatus.OK);
     }

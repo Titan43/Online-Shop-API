@@ -22,7 +22,7 @@ import java.util.Set;
     private Long id;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @Transient
     private Long userId;
@@ -33,6 +33,9 @@ import java.util.Set;
     private LocalDate date;
 
     public Long getUserId() {
-        return user.getId();
+        if(user != null){
+            return user.getId();
+        }
+        return null;
     }
 }

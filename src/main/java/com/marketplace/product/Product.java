@@ -23,10 +23,11 @@ import java.util.Set;
     private String name;
     private Double price;
     private Long quantity;
+    private boolean isAvailable = true;
     @Lob
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
     private User user;
 
@@ -38,7 +39,10 @@ import java.util.Set;
     private Long user_id;
 
     public Long getUser_id() {
-        return user.getId();
+        if(user != null){
+            return user.getId();
+        }
+        return null;
     }
 
     public Product(String name, Double price, Long quantity, String description, User user) {
