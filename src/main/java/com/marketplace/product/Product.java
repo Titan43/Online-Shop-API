@@ -23,6 +23,7 @@ import java.util.Set;
     private String name;
     private Double price;
     private Long quantity;
+    @JsonIgnore
     private boolean isAvailable = true;
     @Lob
     private String description;

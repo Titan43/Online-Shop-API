@@ -130,7 +130,7 @@ public class ProductService implements IProductService{
             return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Product> product = productRepository.findById(prodId);
+        Optional<Product> product = productRepository.findByIdAvailable(prodId);
 
         if(product.isEmpty()){
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
@@ -151,7 +151,7 @@ public class ProductService implements IProductService{
         Page<Product> productPage;
 
         try {
-            productPage = productRepository.findAll(
+            productPage = productRepository.findAllAvailable(
                     PageRequest.of(Integer.parseInt(page), Integer.parseInt(count)
                     ));
         }
