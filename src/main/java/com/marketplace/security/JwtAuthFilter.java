@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-import static com.marketplace.constants.IAPIConstants.*;
+import static com.marketplace.constants.APIConstants.*;
 
 @Component
 @AllArgsConstructor

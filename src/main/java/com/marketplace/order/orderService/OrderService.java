@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;
 
-public interface IOrderService {
+public interface OrderService {
     ResponseEntity<String> orderProduct(String id, Principal principal);
     ResponseEntity<String> removeOrderedProduct(String id, Principal principal);
     ResponseEntity<String> cancelOrder(Principal principal);

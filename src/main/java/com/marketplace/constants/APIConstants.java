@@ -1,6 +1,6 @@
 package com.marketplace.constants;
 
-public interface IAPIConstants {
+public interface APIConstants {
 
     String ITEM_LINK_START = "localhost:8080/";
     String EMAIL_REGEX = "\\w+@\\w+.\\w+$";

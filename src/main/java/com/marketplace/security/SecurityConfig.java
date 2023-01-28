@@ -27,7 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.marketplace.constants.IAPIConstants.*;
+import static com.marketplace.constants.APIConstants.*;
 
 @Configuration
 @AllArgsConstructor

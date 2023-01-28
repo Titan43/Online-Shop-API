@@ -1,5 +1,5 @@
 package com.marketplace.security;
-import static com.marketplace.constants.IAPIConstants.*;
+import static com.marketplace.constants.APIConstants.*;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

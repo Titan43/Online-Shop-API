@@ -3,8 +3,6 @@ package com.marketplace.user.userService;
 import com.marketplace.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -12,18 +10,18 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserDetailsServiceImp implements UserDetailsService {
+public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findUserByUsername(username);
 
         if(user.isEmpty())
             throw new UsernameNotFoundException("User Not Found");
 
-        return new UserDetailsImpl(user.get());
+        return new UserDetails(user.get());
     }
 }

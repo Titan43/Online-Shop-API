@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "\"orderedProduct\"")
 @AllArgsConstructor
 @NoArgsConstructor
+@IdClass(OrderedProductId.class)
 public class OrderedProduct {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)

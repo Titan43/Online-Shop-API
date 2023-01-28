@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+import static com.marketplace.constants.APIConstants.API_PREFIX;
 
 @RestController
 @AllArgsConstructor

@@ -2,16 +2,15 @@ package com.marketplace.controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marketplace.product.Product;
-import com.marketplace.product.productService.IProductService;
+import com.marketplace.product.productService.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Map;
 
-import static com.marketplace.constants.IAPIConstants.API_PREFIX;
+import static com.marketplace.constants.APIConstants.API_PREFIX;
 
 @RestController
 @AllArgsConstructor
@@ -19,7 +18,7 @@ import static com.marketplace.constants.IAPIConstants.API_PREFIX;
 public class ProductController {
 
     @Autowired
-    private IProductService productService;
+    private ProductService productService;
 
     @PostMapping
     public ResponseEntity<String> addNewProduct(@RequestBody Product product, Principal principal) {

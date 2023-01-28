@@ -3,16 +3,15 @@ package com.marketplace.user.userService;
 import com.marketplace.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserDetailsImpl implements UserDetails {
+public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
     private final User user;
 
-    public UserDetailsImpl(User user) {
+    public UserDetails(User user) {
         super();
         this.user = user;
     }
