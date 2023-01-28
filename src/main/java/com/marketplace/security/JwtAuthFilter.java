@@ -47,7 +47,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             path.contains(REGISTER_PATH)||
             path.contains(PRODUCTS_PATH+"/products")||
                 (path.contains(PRODUCTS_PATH)&&method.equals("GET"))){
-
             filterChain.doFilter(request, response);
             return;
         }

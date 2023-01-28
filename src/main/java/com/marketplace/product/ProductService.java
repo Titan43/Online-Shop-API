@@ -91,7 +91,7 @@ public class ProductService implements com.marketplace.product.productService.Pr
             return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Product> product = productRepository.findById(prodId);
+        Optional<Product> product = productRepository.findByIdAvailable(prodId);
 
         if(product.isEmpty()){
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
@@ -135,7 +135,6 @@ public class ProductService implements com.marketplace.product.productService.Pr
         if(product.isEmpty()){
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
         }
-
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
