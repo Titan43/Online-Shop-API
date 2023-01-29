@@ -31,8 +31,8 @@ public class ProductController {
         return productService.deleteProduct(id, principal);
     }
 
-    @GetMapping
-    public ResponseEntity<?> getProduct(@RequestParam String id) {
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> getProduct(@PathVariable String id) {
         return productService.getProduct(id);
     }
 

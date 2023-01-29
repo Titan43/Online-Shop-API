@@ -51,7 +51,7 @@ public class SecurityConfig{
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, PRODUCTS_PATH)
+                .requestMatchers(HttpMethod.GET, PRODUCTS_PATH+"/*")
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
