@@ -24,4 +24,10 @@ public class OrderController {
                                                Principal principal) {
         return orderService.orderProduct(id, quantity, principal);
     }
+
+    @GetMapping(path = "/cancel")
+    public ResponseEntity<String> cancelOrder(Principal principal){
+        return orderService.cancelOrder(principal);
+    }
+
 }

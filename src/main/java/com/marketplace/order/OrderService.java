@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -102,7 +103,6 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
         orderedProductRepository.save(orderedProduct);
 
-
         return new ResponseEntity<>("Product was successfully ordered(CODE 201)", HttpStatus.CREATED);
     }
 
@@ -113,7 +113,21 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
     @Override
     public ResponseEntity<String> cancelOrder(Principal principal) {
-        return null;
+
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+        Optional<Order> unfinishedOrder = orderRepository.findUnfinishedByUserId(user.get().getId());
+        if(unfinishedOrder.isEmpty()){
+            return new ResponseEntity<>("Theres no order to cancel(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        List<OrderedProduct> orderedProducts = orderedProductRepository.findByOrderId(unfinishedOrder.get().getId());
+        orderedProductRepository.deleteAll(orderedProducts);
+        orderRepository.delete(unfinishedOrder.get());
+
+        return new ResponseEntity<>("Order was successfully canceled(CODE 200)", HttpStatus.OK);
     }
 
     @Override
