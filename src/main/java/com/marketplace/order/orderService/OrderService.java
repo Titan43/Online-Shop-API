@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import java.security.Principal;
 
 public interface OrderService {
-    ResponseEntity<String> orderProduct(String id, Principal principal);
+    ResponseEntity<String> orderProduct(String id, String quantity, Principal principal);
     ResponseEntity<String> removeOrderedProduct(String id, Principal principal);
     ResponseEntity<String> cancelOrder(Principal principal);
     ResponseEntity<String> confirmOrder(Principal principal);

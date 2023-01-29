@@ -3,6 +3,7 @@ package com.marketplace.order;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @IdClass(OrderedProductId.class)
-public class OrderedProduct {
+@Data public class OrderedProduct {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
@@ -32,5 +33,12 @@ public class OrderedProduct {
 
     public Long getProductId() {
         return product.getId();
+    }
+
+    public OrderedProduct(Order order, Product product, Long quantity, Double amount) {
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.amount = amount;
     }
 }

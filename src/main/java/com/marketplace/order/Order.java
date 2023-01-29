@@ -32,12 +32,18 @@ import java.util.Set;
     private Double amount;
     private LocalDate date;
     @JsonIgnore
-    private boolean isFinished;
+    private boolean isFinished = false;
 
     public Long getUserId() {
         if(user != null){
             return user.getId();
         }
         return null;
+    }
+
+    public Order(User user, Double amount, LocalDate date) {
+        this.user = user;
+        this.amount = amount;
+        this.date = date;
     }
 }

@@ -66,8 +66,7 @@ public class ProductService implements com.marketplace.product.productService.Pr
 
         Product savedProduct = productRepository.save(product);
         URI location = ServletUriComponentsBuilder
-                .fromPath(ITEM_LINK_START+API_PREFIX+"product")
-                .queryParam("id", savedProduct.getId())
+                .fromPath(ITEM_LINK_START+API_PREFIX+"product/"+savedProduct.getId())
                 .build()
                 .toUri();
 

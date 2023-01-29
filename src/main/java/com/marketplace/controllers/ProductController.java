@@ -3,7 +3,6 @@ package com.marketplace.controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marketplace.product.Product;
 import com.marketplace.product.productService.ProductService;
-import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
