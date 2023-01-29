@@ -1,5 +1,7 @@
 package com.marketplace.user;
 
+import com.marketplace.order.Order;
+import com.marketplace.order.orderService.OrderRepository;
 import com.marketplace.product.Product;
 import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.constants.APIConstants;
@@ -37,6 +39,10 @@ public class UserService implements com.marketplace.user.userService.UserService
 
     @Autowired
     private final ValidatorService validatorService;
+
+    @Autowired
+    private final OrderRepository orderRepository;
+
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
@@ -103,6 +109,11 @@ public class UserService implements com.marketplace.user.userService.UserService
         productRepository.saveAll(
                 userProducts
         );
+
+        List<Order> userOrders = orderRepository.findAllByUserId(user.get().getId());
+        userOrders.forEach(o-> o.setUser(null));
+        orderRepository.saveAll(userOrders);
+
         userRepository.deleteById(user.get().getId());
 
         return new ResponseEntity<>("User deleted successfully(CODE 200)", HttpStatus.OK);

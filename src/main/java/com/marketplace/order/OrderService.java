@@ -69,19 +69,10 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
         }
 
-        if(prodQuantity>product.get().getQuantity()){
-            return new ResponseEntity<>("Not enough items for order(CODE 400)", HttpStatus.BAD_REQUEST);
-        }
-
         Optional<Order> order = orderRepository.findUnfinishedByUserId(user.get().getId());
         Order userOrder;
 
         double amount = product.get().getPrice()*prodQuantity;
-        System.out.println(amount);
-        Product updatedProduct = product.get();
-        updatedProduct.setQuantity(updatedProduct.getQuantity()-prodQuantity);
-
-        productRepository.save(updatedProduct);
 
         if(order.isEmpty()){
             userOrder = orderRepository.save(new Order(user.get(), amount, LocalDate.now()));
@@ -97,11 +88,11 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         OrderedProduct orderedProduct;
 
         Optional<OrderedProduct> previouslyOrderedProduct = orderedProductRepository.findByOrderIdAndProductId(
-                userOrder.getId(), updatedProduct.getId()
+                userOrder.getId(), product.get().getId()
         );
 
         if(previouslyOrderedProduct.isEmpty()){
-            orderedProduct = new OrderedProduct(userOrder, updatedProduct, prodQuantity, amount);
+            orderedProduct = new OrderedProduct(userOrder, product.get(), prodQuantity, amount);
         }
         else{
             orderedProduct = previouslyOrderedProduct.get();
