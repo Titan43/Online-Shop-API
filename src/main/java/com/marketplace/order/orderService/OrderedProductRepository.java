@@ -15,6 +15,6 @@ public interface OrderedProductRepository extends JpaRepository<OrderedProduct, 
     Optional<OrderedProduct> findByOrderIdAndProductId(Long orderId, Long productId);
 
     @Query("SELECT op FROM OrderedProduct op WHERE op.order.id = ?1")
-    List<OrderedProduct> findByOrderId(Long orderId);
+    List<OrderedProduct> findAllByOrderId(Long orderId);
 
 }

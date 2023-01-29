@@ -25,7 +25,7 @@ public class OrderController {
         return orderService.orderProduct(id, quantity, principal);
     }
 
-    @GetMapping(path = "/cancel")
+    @DeleteMapping(path = "/cancel")
     public ResponseEntity<String> cancelOrder(Principal principal){
         return orderService.cancelOrder(principal);
     }

@@ -123,7 +123,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("Theres no order to cancel(CODE 404)", HttpStatus.NOT_FOUND);
         }
 
-        List<OrderedProduct> orderedProducts = orderedProductRepository.findByOrderId(unfinishedOrder.get().getId());
+        List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(unfinishedOrder.get().getId());
         orderedProductRepository.deleteAll(orderedProducts);
         orderRepository.delete(unfinishedOrder.get());
 
