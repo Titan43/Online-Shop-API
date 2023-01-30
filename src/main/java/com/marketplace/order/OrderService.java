@@ -9,6 +9,7 @@ import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.user.userEntities.User;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.ValidatorService;
+import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -133,7 +134,52 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
     @Override
     public ResponseEntity<String> confirmOrder(Principal principal) {
-        return null;
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+        Optional<Order> unfinishedOrder = orderRepository.findUnfinishedByUserId(user.get().getId());
+        if(unfinishedOrder.isEmpty()){
+            return new ResponseEntity<>("Theres no pending order to confirm(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(unfinishedOrder.get().getId());
+        List<Product> products = new ArrayList<>();
+
+
+        for(OrderedProduct orderedProduct: orderedProducts){
+            Optional<Product> product = productRepository.findByIdAvailable(orderedProduct.getProductId());
+            if(product.isEmpty()){
+                return new ResponseEntity<>(
+                        "Order cannot be confirmed, Product with id:"
+                                +orderedProduct.getProductId()+
+                                " is unavailable (CODE 404)", HttpStatus.NOT_FOUND);
+            }
+            else if(product.get().getQuantity()<orderedProduct.getQuantity()){
+                return new ResponseEntity<>(
+                        "Order cannot be confirmed, such quantity of Product with id:"
+                                +orderedProduct.getProductId()+
+                                " cannot be ordered (CODE 409)", HttpStatus.CONFLICT);
+            }
+            Product updatedProduct = product.get();
+            updatedProduct.setQuantity(updatedProduct.getQuantity() - orderedProduct.getQuantity());
+            products.add(updatedProduct);
+        }
+
+        try{
+            productRepository.saveAll(products);
+        }
+        catch (OptimisticLockException e){
+            return new ResponseEntity<>(
+                    "Order cannot be confirmed right now(CODE 409)", HttpStatus.CONFLICT);
+        }
+
+        Order order = unfinishedOrder.get();
+        order.setFinished(true);
+        orderRepository.save(order);
+
+        return new ResponseEntity<>(
+                "Order was successfully confirmed(CODE 200)", HttpStatus.OK);
     }
 
     @Override

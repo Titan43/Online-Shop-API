@@ -39,6 +39,10 @@ import java.util.Set;
     @Transient
     private Long user_id;
 
+    @JsonIgnore
+    @Version
+    private Long version;
+
     public Long getUser_id() {
         if(user != null){
             return user.getId();
