@@ -2,6 +2,7 @@ package com.marketplace.user;
 
 import com.marketplace.order.orderEntities.Order;
 import com.marketplace.order.orderService.OrderRepository;
+import com.marketplace.order.orderService.OrderedProductRepository;
 import com.marketplace.product.Product;
 import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.constants.APIConstants;
@@ -44,6 +45,9 @@ public class UserService implements com.marketplace.user.userService.UserService
 
     @Autowired
     private final OrderRepository orderRepository;
+
+    @Autowired
+    private final OrderedProductRepository orderedProductRepository;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
@@ -111,6 +115,14 @@ public class UserService implements com.marketplace.user.userService.UserService
         productRepository.saveAll(
                 userProducts
         );
+
+        Optional<Order> unfinishedOrder = orderRepository.findUnfinishedByUserId(user.get().getId());
+        if(unfinishedOrder.isPresent()){
+            orderedProductRepository.deleteAll(
+                    orderedProductRepository.findAllByOrderId(unfinishedOrder.get().getId())
+            );
+            orderRepository.delete(unfinishedOrder.get());
+        }
 
         List<Order> userOrders = orderRepository.findAllByUserId(user.get().getId());
         userOrders.forEach(o-> o.setUser(null));
