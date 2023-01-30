@@ -1,4 +1,4 @@
-package com.marketplace.order;
+package com.marketplace.order.orderEntities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.marketplace.product.Product;

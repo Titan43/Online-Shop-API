@@ -2,8 +2,8 @@ package com.marketplace.product;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.marketplace.product.productService.ProductRepository;
-import com.marketplace.user.User;
-import com.marketplace.user.UserRole;
+import com.marketplace.user.userEntities.User;
+import com.marketplace.user.userEntities.UserRole;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.ValidatorService;
 import lombok.AllArgsConstructor;
@@ -185,7 +185,7 @@ public class ProductService implements com.marketplace.product.productService.Pr
             return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Product> product = productRepository.findById(prodId);
+        Optional<Product> product = productRepository.findByIdAvailable(prodId);
 
         if(product.isEmpty()){
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);

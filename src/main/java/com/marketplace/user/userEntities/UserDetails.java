@@ -1,6 +1,5 @@
-package com.marketplace.user.userService;
+package com.marketplace.user.userEntities;
 
-import com.marketplace.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

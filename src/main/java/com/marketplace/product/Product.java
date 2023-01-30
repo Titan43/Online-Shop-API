@@ -1,8 +1,8 @@
 package com.marketplace.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.marketplace.order.OrderedProduct;
-import com.marketplace.user.User;
+import com.marketplace.order.orderEntities.OrderedProduct;
+import com.marketplace.user.userEntities.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

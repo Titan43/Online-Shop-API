@@ -1,10 +1,12 @@
 package com.marketplace.order;
 
+import com.marketplace.order.orderEntities.Order;
+import com.marketplace.order.orderEntities.OrderedProduct;
 import com.marketplace.order.orderService.OrderRepository;
 import com.marketplace.order.orderService.OrderedProductRepository;
 import com.marketplace.product.Product;
 import com.marketplace.product.productService.ProductRepository;
-import com.marketplace.user.User;
+import com.marketplace.user.userEntities.User;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.ValidatorService;
 import lombok.AllArgsConstructor;

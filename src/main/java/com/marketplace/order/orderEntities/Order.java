@@ -1,7 +1,7 @@
-package com.marketplace.order;
+package com.marketplace.order.orderEntities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.marketplace.user.User;
+import com.marketplace.user.userEntities.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

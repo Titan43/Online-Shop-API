@@ -1,4 +1,4 @@
-package com.marketplace.order;
+package com.marketplace.order.orderEntities;
 
 import com.marketplace.product.Product;
 import lombok.AllArgsConstructor;

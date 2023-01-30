@@ -1,6 +1,6 @@
 package com.marketplace.user.userService;
 
-import com.marketplace.user.User;
+import com.marketplace.user.userEntities.User;
 import org.springframework.http.ResponseEntity;
 
 import java.security.Principal;

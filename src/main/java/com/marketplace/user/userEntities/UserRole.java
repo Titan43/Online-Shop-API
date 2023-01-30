@@ -1,4 +1,4 @@
-package com.marketplace.user;
+package com.marketplace.user.userEntities;
 
 public enum UserRole {
     BUYER, VENDOR

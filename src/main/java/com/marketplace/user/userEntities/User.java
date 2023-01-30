@@ -1,6 +1,6 @@
-package com.marketplace.user;
+package com.marketplace.user.userEntities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.marketplace.order.Order;
+import com.marketplace.order.orderEntities.Order;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.*;

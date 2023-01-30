@@ -1,6 +1,6 @@
 package com.marketplace.order.orderService;
 
-import com.marketplace.order.Order;
+import com.marketplace.order.orderEntities.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
