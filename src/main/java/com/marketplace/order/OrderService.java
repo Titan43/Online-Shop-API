@@ -113,7 +113,47 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
     @Override
     public ResponseEntity<String> removeOrderedProduct(String id, Principal principal) {
-        return null;
+
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+        Optional<Order> unfinishedOrder = orderRepository.findUnfinishedByUserId(user.get().getId());
+        if(unfinishedOrder.isEmpty()){
+            return new ResponseEntity<>("Theres no pending order(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        if(validatorService.idIsNotValid(id)){
+            return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        long prodId;
+        try {
+            prodId = Long.parseLong(id);
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Product> product = productRepository.findByIdAvailable(prodId);
+
+        if(product.isEmpty()) {
+            return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        Optional<OrderedProduct> previouslyOrderedProduct = orderedProductRepository.findByOrderIdAndProductId(
+                unfinishedOrder.get().getId(), product.get().getId()
+        );
+
+        if(previouslyOrderedProduct.isEmpty()){
+            return new ResponseEntity<>("OrderedProduct with such id combination does not exist(CODE 404)",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        orderedProductRepository.delete(previouslyOrderedProduct.get());
+
+        return new ResponseEntity<>("OrderedProduct was successfully removed(CODE 200)",
+                HttpStatus.OK);
     }
 
     @Override

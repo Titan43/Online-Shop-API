@@ -49,4 +49,9 @@ public class OrderController {
     public ResponseEntity<?> showOrders(@RequestParam String page, @RequestParam String count, Principal principal){
         return orderService.showOrders(page, count, principal);
     }
+
+    @DeleteMapping(path = "/removeOrdered/{id}")
+    public ResponseEntity<String> removeOrderedProduct(@PathVariable String id, Principal principal){
+        return orderService.removeOrderedProduct(id, principal);
+    }
 }
