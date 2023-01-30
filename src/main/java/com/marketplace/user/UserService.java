@@ -11,6 +11,8 @@ import com.marketplace.user.userEntities.UserRole;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.ValidatorService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +33,7 @@ import static com.marketplace.constants.APIConstants.ITEM_LINK_START;
 
 @Service
 @Qualifier("firstImplementation")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService implements com.marketplace.user.userService.UserService {
 
     @Autowired
@@ -51,6 +53,8 @@ public class UserService implements com.marketplace.user.userService.UserService
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    private UserRole requestSenderRole;
 
     @Override
     public ResponseEntity<String> addNewUser(User user) {
@@ -138,11 +142,16 @@ public class UserService implements com.marketplace.user.userService.UserService
         if(validatorService.usernameIsNotValid(username)){
             return new ResponseEntity<>("Invalid username(CODE 400)", HttpStatus.BAD_REQUEST);
         }
+        Optional<User> requestSender = userRepository.findUserByUsername(principal.getName());
+        if (requestSender.isEmpty()){
+            return new ResponseEntity<>("Owner of this token does not exist(CODE 401)", HttpStatus.UNAUTHORIZED);
+        }
+        requestSenderRole = requestSender.get().getRole();
         Optional<User> user = userRepository.findUserByUsername(username);
         if(user.isEmpty())
             return new ResponseEntity<>("User not found (CODE 404)", HttpStatus.NOT_FOUND);
-        else if(!principal.getName().equals(username))
-            return new ResponseEntity<>("Yor token is not valid for this user(CODE 403)", HttpStatus.FORBIDDEN);
+        else if(!principal.getName().equals(username) && !requestSenderRole.equals(UserRole.MANAGER))
+            return new ResponseEntity<>("Your token is not valid for this action(CODE 403)", HttpStatus.FORBIDDEN);
 
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
@@ -169,7 +178,11 @@ public class UserService implements com.marketplace.user.userService.UserService
             return new ResponseEntity<>( "User email cannot be changed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
         else if(user.getRole() != null){
-            return new ResponseEntity<>("User role cannot be changed by ordinary User(CODE 400)", HttpStatus.BAD_REQUEST);
+            if(!requestSenderRole.equals(UserRole.MANAGER)) {
+                return new ResponseEntity<>("User role cannot be changed by ordinary User(CODE 400)",
+                        HttpStatus.BAD_REQUEST);
+            }
+            oldUserData.setRole(user.getRole());
         }
 
         if(user.getDob() != null){

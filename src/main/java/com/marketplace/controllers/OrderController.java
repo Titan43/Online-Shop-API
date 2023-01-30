@@ -39,4 +39,9 @@ public class OrderController {
     public ResponseEntity<String> confirmOrder(Principal principal){
         return orderService.confirmOrder(principal);
     }
+
+    @GetMapping(path = "/{id}")
+    public  ResponseEntity<?> showOrderById(@PathVariable String id, Principal principal){
+        return orderService.showOrderById(id, principal);
+    }
 }

@@ -7,6 +7,7 @@ import com.marketplace.order.orderService.OrderedProductRepository;
 import com.marketplace.product.Product;
 import com.marketplace.product.productService.ProductRepository;
 import com.marketplace.user.userEntities.User;
+import com.marketplace.user.userEntities.UserRole;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.ValidatorService;
 import jakarta.persistence.OptimisticLockException;
@@ -176,6 +177,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
         Order order = unfinishedOrder.get();
         order.setFinished(true);
+        order.setDate(LocalDate.now());
         orderRepository.save(order);
 
         return new ResponseEntity<>(
@@ -206,7 +208,41 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
     @Override
     public ResponseEntity<?> showOrderById(String id, Principal principal) {
-        return null;
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+        else if(!user.get().getRole().equals(UserRole.MANAGER)){
+            return new ResponseEntity<>("You don't have enough rights to preview other orders(CODE 403)",
+                    HttpStatus.NOT_FOUND);
+        }
+        if(validatorService.idIsNotValid(id)){
+            return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+        long orderId;
+        try {
+            orderId = Long.parseLong(id);
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Order> order = orderRepository.findByOrderId(orderId);
+        if(order.isEmpty()){
+            return new ResponseEntity<>("Order with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        Map<String, Object> orderDetails = new HashMap<>();
+
+        List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(order.get().getId());
+
+        orderDetails.put("order_owner", order.get().getUserId());
+        orderDetails.put("confirmed", order.get().isFinished());
+        orderDetails.put("ordered_products", orderedProducts);
+        orderDetails.put("total_price", order.get().getTotalCost());
+        orderDetails.put("date", order.get().getDate());
+
+        return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
     @Override
