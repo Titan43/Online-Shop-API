@@ -28,7 +28,7 @@ import lombok.NoArgsConstructor;
     @Transient
     private String productName;
     private Long quantity;
-    private Double amount;
+    private Double totalCost;
 
     public Long getProductId() {
         return product.getId();
@@ -38,10 +38,14 @@ import lombok.NoArgsConstructor;
         return product.getName();
     }
 
-    public OrderedProduct(Order order, Product product, Long quantity, Double amount) {
+    public void setTotalCost(Double totalCost) {
+        this.totalCost = Math.round(totalCost *100.0)/100.0;
+    }
+
+    public OrderedProduct(Order order, Product product, Long quantity, Double totalCost) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
-        this.amount = amount;
+        this.totalCost = totalCost;
     }
 }

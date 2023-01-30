@@ -1,7 +1,6 @@
 package com.marketplace.order;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.marketplace.product.Product;
 import com.marketplace.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ import java.util.Set;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", orphanRemoval = true)
     private Set<OrderedProduct> orderedProducts = new HashSet<>();
-    private Double amount;
+    private Double totalCost;
     private LocalDate date;
     @JsonIgnore
     private boolean isFinished = false;
@@ -41,9 +40,13 @@ import java.util.Set;
         return null;
     }
 
-    public Order(User user, Double amount, LocalDate date) {
+    public void setTotalCost(Double totalCost) {
+        this.totalCost = Math.round(totalCost *100.0)/100.0;
+    }
+
+    public Order(User user, Double totalCost, LocalDate date) {
         this.user = user;
-        this.amount = amount;
+        this.totalCost = totalCost;
         this.date = date;
     }
 }

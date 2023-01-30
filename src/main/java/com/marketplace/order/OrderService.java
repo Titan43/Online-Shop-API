@@ -79,7 +79,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         }
         else{
             userOrder = order.get();
-            userOrder.setAmount(userOrder.getAmount()+amount);
+            userOrder.setTotalCost(userOrder.getTotalCost()+amount);
             userOrder.setDate(LocalDate.now());
         }
 
@@ -96,7 +96,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         }
         else{
             orderedProduct = previouslyOrderedProduct.get();
-            orderedProduct.setAmount(orderedProduct.getAmount()+amount);
+            orderedProduct.setTotalCost(orderedProduct.getTotalCost()+amount);
             orderedProduct.setQuantity(orderedProduct.getQuantity()+prodQuantity);
         }
 
@@ -150,7 +150,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(unfinishedOrder.get().getId());
 
         orderDetails.put("ordered_products", orderedProducts);
-        orderDetails.put("total_price", unfinishedOrder.get().getAmount());
+        orderDetails.put("total_price", unfinishedOrder.get().getTotalCost());
         orderDetails.put("date", unfinishedOrder.get().getDate());
 
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
