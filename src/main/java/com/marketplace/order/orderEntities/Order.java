@@ -30,8 +30,7 @@ import java.util.Set;
     private Set<OrderedProduct> orderedProducts = new HashSet<>();
     private Double totalCost;
     private LocalDate date;
-    @JsonIgnore
-    private boolean isFinished = false;
+    private boolean confirmed = false;
 
     public Long getUserId() {
         if(user != null){

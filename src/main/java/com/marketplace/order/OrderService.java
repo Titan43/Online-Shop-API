@@ -178,7 +178,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         }
 
         Order order = unfinishedOrder.get();
-        order.setFinished(true);
+        order.setConfirmed(true);
         order.setDate(LocalDate.now());
         orderRepository.save(order);
 
@@ -239,7 +239,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(order.get().getId());
 
         orderDetails.put("order_owner", order.get().getUserId());
-        orderDetails.put("confirmed", order.get().isFinished());
+        orderDetails.put("confirmed", order.get().isConfirmed());
         orderDetails.put("ordered_products", orderedProducts);
         orderDetails.put("total_price", order.get().getTotalCost());
         orderDetails.put("date", order.get().getDate());

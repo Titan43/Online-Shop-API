@@ -14,7 +14,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o from Order o WHERE o.user.id = ?1")
     List<Order> findAllByUserId(Long userId);
 
-    @Query("SELECT o from Order o WHERE o.user.id = ?1 and o.isFinished = false")
+    @Query("SELECT o from Order o WHERE o.user.id = ?1 and o.confirmed = false")
     Optional<Order> findUnfinishedByUserId(Long userId);
 
     @Query("SELECT o from Order o WHERE o.id = ?1")
