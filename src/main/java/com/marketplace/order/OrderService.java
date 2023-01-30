@@ -13,6 +13,8 @@ import com.marketplace.validator.ValidatorService;
 import jakarta.persistence.OptimisticLockException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -247,6 +249,37 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
     @Override
     public ResponseEntity<?> showOrders(String page, String count, Principal principal) {
-        return null;
+
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+        else if(!user.get().getRole().equals(UserRole.MANAGER)){
+            return new ResponseEntity<>("You don't have enough rights to preview other orders(CODE 403)",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        if(validatorService.idIsNotValid(page)){
+            return new ResponseEntity<>("Invalid page number passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+        else if(validatorService.idIsNotValid(count)){
+            return new ResponseEntity<>("Invalid entity count passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
+
+        Page<Order> orderPage;
+
+        try {
+            orderPage = orderRepository.findAll(
+                    PageRequest.of(Integer.parseInt(page), Integer.parseInt(count)
+                    ));
+        }
+        catch (IllegalArgumentException e){
+            return new ResponseEntity<>("Invalid entity count or page number passed(CODE 400)",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        List<Order> orders = orderPage.getContent();
+
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }

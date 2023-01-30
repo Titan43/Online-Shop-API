@@ -44,4 +44,9 @@ public class OrderController {
     public  ResponseEntity<?> showOrderById(@PathVariable String id, Principal principal){
         return orderService.showOrderById(id, principal);
     }
+
+    @GetMapping(path = "/allOrders")
+    public ResponseEntity<?> showOrders(@RequestParam String page, @RequestParam String count, Principal principal){
+        return orderService.showOrders(page, count, principal);
+    }
 }
