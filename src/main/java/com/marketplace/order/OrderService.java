@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -120,7 +119,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         }
         Optional<Order> unfinishedOrder = orderRepository.findUnfinishedByUserId(user.get().getId());
         if(unfinishedOrder.isEmpty()){
-            return new ResponseEntity<>("Theres no order to cancel(CODE 404)", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Theres no pending order(CODE 404)", HttpStatus.NOT_FOUND);
         }
 
         List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(unfinishedOrder.get().getId());
@@ -137,7 +136,24 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
     @Override
     public ResponseEntity<?> showMyOrder(Principal principal) {
-        return null;
+        Optional<User> user = userRepository.findUserByUsername(principal.getName());
+        if (user.isEmpty()){
+            return new ResponseEntity<>("Such User does not exist(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+        Optional<Order> unfinishedOrder = orderRepository.findUnfinishedByUserId(user.get().getId());
+        if(unfinishedOrder.isEmpty()){
+            return new ResponseEntity<>("Theres no pending order to show(CODE 404)", HttpStatus.NOT_FOUND);
+        }
+
+        Map<String, Object> orderDetails = new HashMap<>();
+
+        List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(unfinishedOrder.get().getId());
+
+        orderDetails.put("ordered_products", orderedProducts);
+        orderDetails.put("total_price", unfinishedOrder.get().getAmount());
+        orderDetails.put("date", unfinishedOrder.get().getDate());
+
+        return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
     @Override

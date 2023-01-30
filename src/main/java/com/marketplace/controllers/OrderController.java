@@ -30,4 +30,9 @@ public class OrderController {
         return orderService.cancelOrder(principal);
     }
 
+    @GetMapping(path = "/myOrder")
+    public ResponseEntity<?> showMyOrder(Principal principal){
+        return orderService.showMyOrder(principal);
+    }
+
 }

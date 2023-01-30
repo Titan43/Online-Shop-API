@@ -1,5 +1,6 @@
 package com.marketplace.order;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.marketplace.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,24 +16,26 @@ import lombok.NoArgsConstructor;
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Order order;
-    @Transient
-    private Long orderId;
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private Product product;
     @Transient
     private Long productId;
+    @Transient
+    private String productName;
     private Long quantity;
     private Double amount;
 
-    public Long getOrderId() {
-        return order.getId();
-    }
-
     public Long getProductId() {
         return product.getId();
+    }
+
+    public String getProductName() {
+        return product.getName();
     }
 
     public OrderedProduct(Order order, Product product, Long quantity, Double amount) {
