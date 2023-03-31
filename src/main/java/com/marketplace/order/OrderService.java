@@ -135,7 +135,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Product> product = productRepository.findByIdAvailable(prodId);
+        Optional<Product> product = productRepository.findById(prodId);
 
         if(product.isEmpty()) {
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
