@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.marketplace.constants.APIConstants.API_PREFIX;
 
 @RestController
@@ -32,7 +35,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticate(@RequestBody AuthRequest request){
+    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request){
         UserDetails user;
         try {
             user = userDetailsService.loadUserByUsername(request.getUsername());
@@ -47,6 +50,9 @@ public class AuthController {
         catch (BadCredentialsException e){
             return new ResponseEntity<>("Wrong password(CODE 401)", HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(jwtUtil.generateToken(user), HttpStatus.OK);
+
+        Map<String, String> token = new HashMap<>();
+        token.put("token", jwtUtil.generateToken(user));
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }

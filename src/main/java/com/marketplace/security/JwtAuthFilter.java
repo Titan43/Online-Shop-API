@@ -43,6 +43,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String method = request.getMethod();
         final String path = request.getServletPath();
 
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         if(path.contains(AUTH_PATH) ||
             path.contains(REGISTER_PATH)||
             path.contains(PRODUCTS_PATH+"/products")||
