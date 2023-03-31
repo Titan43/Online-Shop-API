@@ -54,9 +54,6 @@ public class AuthController {
 
         Map<String, String> token = new HashMap<>();
         token.put("token", jwtUtil.generateToken(user));
-        String cookieValue = "token=" + token.get("token") + ";Path=/";
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.SET_COOKIE, cookieValue);
-        return new ResponseEntity<>(token, headers, HttpStatus.OK);
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }
