@@ -135,7 +135,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Product> product = productRepository.findByIdAvailable(prodId);
+        Optional<Product> product = productRepository.findById(prodId);
 
         if(product.isEmpty()) {
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
@@ -149,6 +149,11 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("OrderedProduct with such id combination does not exist(CODE 404)",
                     HttpStatus.NOT_FOUND);
         }
+
+        Order changed_order = unfinishedOrder.get();
+        changed_order.setDate(LocalDate.now());
+        changed_order.setTotalCost(changed_order.getTotalCost()-previouslyOrderedProduct.get().getTotalCost());
+        orderRepository.save(changed_order);
 
         orderedProductRepository.delete(previouslyOrderedProduct.get());
 
