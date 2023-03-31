@@ -4,6 +4,7 @@ import com.marketplace.security.AuthRequest;
 import com.marketplace.security.JwtUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -53,6 +54,9 @@ public class AuthController {
 
         Map<String, String> token = new HashMap<>();
         token.put("token", jwtUtil.generateToken(user));
-        return new ResponseEntity<>(token, HttpStatus.OK);
+        String cookieValue = "token=" + token.get("token") + ";Path=/";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE, cookieValue);
+        return new ResponseEntity<>(token, headers, HttpStatus.OK);
     }
 }
