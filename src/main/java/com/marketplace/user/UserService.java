@@ -205,9 +205,9 @@ public class UserService implements com.marketplace.user.userService.UserService
                 return new ResponseEntity<>("Invalid phone number (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setPhoneNumber(user.getPhoneNumber());
         }
-        if(user.getFName()!=null)
+        if(user.getFName()!=null && !user.getFName().trim().equals(""))
             oldUserData.setFName(user.getFName());
-        if(user.getSName()!=null)
+        if(user.getSName()!=null && !user.getSName().trim().equals(""))
             oldUserData.setSName(user.getSName());
         if(user.getPassword()!=null){
             oldUserData.setPassword(passwordEncoder.encode(user.getPassword()));
