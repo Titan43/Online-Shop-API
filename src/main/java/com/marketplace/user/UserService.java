@@ -139,9 +139,16 @@ public class UserService implements com.marketplace.user.userService.UserService
 
     @Override
     public ResponseEntity<?> getUser(String username, Principal principal) {
-        if(validatorService.usernameIsNotValid(username)){
-            return new ResponseEntity<>("Invalid username(CODE 400)", HttpStatus.BAD_REQUEST);
+
+        if(username!=null) {
+            if (validatorService.usernameIsNotValid(username)) {
+                return new ResponseEntity<>("Invalid username(CODE 400)", HttpStatus.BAD_REQUEST);
+            }
         }
+        else{
+            username = principal.getName();
+        }
+
         Optional<User> requestSender = userRepository.findUserByUsername(principal.getName());
         if (requestSender.isEmpty()){
             return new ResponseEntity<>("Owner of this token does not exist(CODE 401)", HttpStatus.UNAUTHORIZED);
