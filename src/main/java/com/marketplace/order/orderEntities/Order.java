@@ -24,7 +24,7 @@ import java.util.Set;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @Transient
-    private Long userId;
+    private String username;
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order", orphanRemoval = true)
     private Set<OrderedProduct> orderedProducts = new HashSet<>();
@@ -32,9 +32,9 @@ import java.util.Set;
     private LocalDate date;
     private boolean confirmed = false;
 
-    public Long getUserId() {
+    public String getUsername() {
         if(user != null){
-            return user.getId();
+            return user.getUsername();
         }
         return null;
     }

@@ -283,7 +283,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
         List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(order.get().getId());
 
-        orderDetails.put("order_owner", order.get().getUserId());
+        orderDetails.put("order_owner", order.get().getUsername());
         orderDetails.put("confirmed", order.get().isConfirmed());
         orderDetails.put("ordered_products", orderedProducts);
         orderDetails.put("total_price", order.get().getTotalCost());
