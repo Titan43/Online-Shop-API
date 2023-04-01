@@ -78,7 +78,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         Optional<Order> order = orderRepository.findUnfinishedByUserId(user.get().getId());
         Order userOrder;
 
-        double amount = product.get().getPrice()*prodQuantity;
+        double amount = Math.round(product.get().getPrice()*prodQuantity*100.0)/100.0;
 
         if(order.isEmpty()){
             userOrder = orderRepository.save(new Order(user.get(), amount, LocalDate.now()));
