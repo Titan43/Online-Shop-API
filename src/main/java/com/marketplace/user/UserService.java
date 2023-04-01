@@ -86,6 +86,8 @@ public class UserService implements com.marketplace.user.userService.UserService
             user.setSName("");
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
         URI location = ServletUriComponentsBuilder
                 .fromPath(ITEM_LINK_START+API_PREFIX+"user")
