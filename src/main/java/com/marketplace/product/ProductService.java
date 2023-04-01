@@ -173,7 +173,12 @@ public class ProductService implements com.marketplace.product.productService.Pr
 
         JsonNode quantityField = quantityJson.get("changeQuantityBy");
 
-        if(!(quantityField.isLong() || quantityField.isInt())){
+
+        try {
+            String quantityString = quantityField.toString().replaceAll("\"", "");
+            Long.parseLong(quantityString);
+        }
+        catch (IllegalArgumentException e){
             return new ResponseEntity<>("changeQuantityBy field has to be a number(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
