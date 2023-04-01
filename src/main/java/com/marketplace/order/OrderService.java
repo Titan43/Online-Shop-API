@@ -78,7 +78,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
         Optional<Order> order = orderRepository.findUnfinishedByUserId(user.get().getId());
         Order userOrder;
 
-        double amount = product.get().getPrice()*prodQuantity;
+        double amount = Math.round(product.get().getPrice()*prodQuantity*100.0)/100.0;
 
         if(order.isEmpty()){
             userOrder = orderRepository.save(new Order(user.get(), amount, LocalDate.now()));
@@ -135,7 +135,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("Invalid id passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Product> product = productRepository.findByIdAvailable(prodId);
+        Optional<Product> product = productRepository.findById(prodId);
 
         if(product.isEmpty()) {
             return new ResponseEntity<>("Product with such id does not exist(CODE 404)", HttpStatus.NOT_FOUND);
@@ -149,6 +149,11 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
             return new ResponseEntity<>("OrderedProduct with such id combination does not exist(CODE 404)",
                     HttpStatus.NOT_FOUND);
         }
+
+        Order changed_order = unfinishedOrder.get();
+        changed_order.setDate(LocalDate.now());
+        changed_order.setTotalCost(changed_order.getTotalCost()-previouslyOrderedProduct.get().getTotalCost());
+        orderRepository.save(changed_order);
 
         orderedProductRepository.delete(previouslyOrderedProduct.get());
 
@@ -278,7 +283,7 @@ public class OrderService implements com.marketplace.order.orderService.OrderSer
 
         List<OrderedProduct> orderedProducts = orderedProductRepository.findAllByOrderId(order.get().getId());
 
-        orderDetails.put("order_owner", order.get().getUserId());
+        orderDetails.put("order_owner", order.get().getUsername());
         orderDetails.put("confirmed", order.get().isConfirmed());
         orderDetails.put("ordered_products", orderedProducts);
         orderDetails.put("total_price", order.get().getTotalCost());

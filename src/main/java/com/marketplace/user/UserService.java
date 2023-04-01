@@ -86,6 +86,8 @@ public class UserService implements com.marketplace.user.userService.UserService
             user.setSName("");
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         userRepository.save(user);
         URI location = ServletUriComponentsBuilder
                 .fromPath(ITEM_LINK_START+API_PREFIX+"user")
@@ -139,9 +141,16 @@ public class UserService implements com.marketplace.user.userService.UserService
 
     @Override
     public ResponseEntity<?> getUser(String username, Principal principal) {
-        if(validatorService.usernameIsNotValid(username)){
-            return new ResponseEntity<>("Invalid username(CODE 400)", HttpStatus.BAD_REQUEST);
+
+        if(username!=null) {
+            if (validatorService.usernameIsNotValid(username)) {
+                return new ResponseEntity<>("Invalid username(CODE 400)", HttpStatus.BAD_REQUEST);
+            }
         }
+        else{
+            username = principal.getName();
+        }
+
         Optional<User> requestSender = userRepository.findUserByUsername(principal.getName());
         if (requestSender.isEmpty()){
             return new ResponseEntity<>("Owner of this token does not exist(CODE 401)", HttpStatus.UNAUTHORIZED);
@@ -191,14 +200,14 @@ public class UserService implements com.marketplace.user.userService.UserService
                         APIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setDob(user.getDob());
         }
-        if(user.getPhoneNumber()!= null){
+        if(user.getPhoneNumber()!= null && !user.getPhoneNumber().trim().equals("")){
             if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber()))
                 return new ResponseEntity<>("Invalid phone number (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setPhoneNumber(user.getPhoneNumber());
         }
-        if(user.getFName()!=null)
+        if(user.getFName()!=null && !user.getFName().trim().equals(""))
             oldUserData.setFName(user.getFName());
-        if(user.getSName()!=null)
+        if(user.getSName()!=null && !user.getSName().trim().equals(""))
             oldUserData.setSName(user.getSName());
         if(user.getPassword()!=null){
             oldUserData.setPassword(passwordEncoder.encode(user.getPassword()));

@@ -9,7 +9,7 @@ public interface APIConstants {
     String ID_REGEX = "^\\d+";
     int VALID_AGE = 14;
     String SECRET_KEY = "secret-token";
-    long TOKEN_LIFETIME = 1000 * 60 * 60 * 2;
+    long TOKEN_LIFETIME = 1000 * 60 * 60 * 6;
     String API_PREFIX = "api/v1/";
     String AUTH_PATH = "/"+API_PREFIX+"auth/authenticate";
     String REGISTER_PATH = "/"+API_PREFIX+"user/register";

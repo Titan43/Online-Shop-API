@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Optional;
 
 import static com.marketplace.constants.APIConstants.API_PREFIX;
 
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<?> getUser(@RequestParam String username, Principal principal){
+    public ResponseEntity<?> getUser(@RequestParam(required = false) String username, Principal principal){
         return userService.getUser(username, principal);
     }
 
