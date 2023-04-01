@@ -200,7 +200,7 @@ public class UserService implements com.marketplace.user.userService.UserService
                         APIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setDob(user.getDob());
         }
-        if(user.getPhoneNumber()!= null){
+        if(user.getPhoneNumber()!= null && !user.getPhoneNumber().trim().equals("")){
             if(validatorService.phoneNumberIsNotValid(user.getPhoneNumber()))
                 return new ResponseEntity<>("Invalid phone number (CODE 400)", HttpStatus.BAD_REQUEST);
             oldUserData.setPhoneNumber(user.getPhoneNumber());
