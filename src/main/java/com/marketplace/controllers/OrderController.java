@@ -35,7 +35,7 @@ public class OrderController {
         return orderService.showMyOrder(principal);
     }
 
-    @GetMapping(path = "/confirm")
+    @PostMapping(path = "/confirm")
     public ResponseEntity<String> confirmOrder(Principal principal){
         return orderService.confirmOrder(principal);
     }
