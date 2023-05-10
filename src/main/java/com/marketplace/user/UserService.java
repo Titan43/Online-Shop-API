@@ -10,8 +10,6 @@ import com.marketplace.user.userEntities.User;
 import com.marketplace.user.userEntities.UserRole;
 import com.marketplace.user.userService.UserRepository;
 import com.marketplace.validator.ValidatorService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -77,6 +75,10 @@ public class UserService implements com.marketplace.user.userService.UserService
             return new ResponseEntity<>( "Invalid date of birth entered. You should be at least " +
                     APIConstants.VALID_AGE + " years old to use the marketplace (CODE 400)", HttpStatus.BAD_REQUEST);
         }
+        else if(user.getPassword()== null || user.getPassword().equals(""))
+            return new ResponseEntity<>( "Invalid password entered. Password cannot be empty(CODE 400)"
+                    , HttpStatus.BAD_REQUEST);
+
         user.setRole(UserRole.BUYER);
 
         if(user.getFName()==null){
@@ -209,7 +211,7 @@ public class UserService implements com.marketplace.user.userService.UserService
             oldUserData.setFName(user.getFName());
         if(user.getSName()!=null && !user.getSName().trim().equals(""))
             oldUserData.setSName(user.getSName());
-        if(user.getPassword()!=null){
+        if(user.getPassword()!=null && !user.getPassword().equals("")){
             oldUserData.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userRepository.save(oldUserData);
