@@ -112,8 +112,10 @@ public class SecurityConfig{
                     "test2", "$2a$12$zKMfr864c/E2mCMWT5rMt.9YR3RzZnwhrryk1p6tnVExDXIZRPUbW",
                     "test@email.com",
                     LocalDate.of(2000, 1, 1), "*101#", UserRole.MANAGER);
-            Product product1 = new Product("testing", 9.99, 10L, "test", testUser);
-            Product product2 = new Product("testing2", 9.99, 10L, "test2", testUser);
+            Product product1 = new Product("testing", 9.99, 10L, "test",
+                    new byte[]{0x00, 0x01, 0x02},testUser);
+            Product product2 = new Product("testing2", 9.99, 10L, "test2",
+                    new byte[]{0x00, 0x01, 0x02}, testUser);
 
             userRepository.saveAll(List.of(testUser, testUser2));
             productRepository.saveAll(List.of(product1, product2));

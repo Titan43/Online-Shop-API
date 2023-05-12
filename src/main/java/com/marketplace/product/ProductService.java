@@ -63,6 +63,9 @@ public class ProductService implements com.marketplace.product.productService.Pr
         else if(product.getDescription() == null || product.getDescription().strip().equals("")){
             return new ResponseEntity<>("Invalid description passed(CODE 400)", HttpStatus.BAD_REQUEST);
         }
+        else if(product.getImage() == null){
+            return new ResponseEntity<>("Invalid image passed(CODE 400)", HttpStatus.BAD_REQUEST);
+        }
 
         Product savedProduct = productRepository.save(product);
         URI location = ServletUriComponentsBuilder

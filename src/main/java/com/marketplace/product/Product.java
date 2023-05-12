@@ -27,6 +27,11 @@ import java.util.Set;
     private boolean isAvailable = true;
     @Lob
     private String description;
+
+    @Lob
+    @Column(name = "image", columnDefinition = "mediumblob")
+    private byte[] image;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnore
@@ -50,11 +55,12 @@ import java.util.Set;
         return null;
     }
 
-    public Product(String name, Double price, Long quantity, String description, User user) {
+    public Product(String name, Double price, Long quantity, String description,  byte[] image, User user) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
+        this.image = image;
         this.user = user;
     }
 }
