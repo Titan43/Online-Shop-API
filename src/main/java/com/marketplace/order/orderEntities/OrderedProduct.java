@@ -30,12 +30,19 @@ import lombok.NoArgsConstructor;
     private Long quantity;
     private Double totalCost;
 
+    @Transient
+    private byte[] image;
+
     public Long getProductId() {
         return product.getId();
     }
 
     public String getProductName() {
         return product.getName();
+    }
+
+    public byte[] getImage() {
+        return product.getImage();
     }
 
     public void setTotalCost(Double totalCost) {
