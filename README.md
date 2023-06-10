@@ -47,7 +47,7 @@ Order entity is the implementation of the shopping cart system. Confirmed orders
 + **GET** `/order/orderProduct/{id}` - takes product id as the path variable and product quantity as the request parameter and adds a chosen product to the current unconfirmed order of the token owner(if the unconfirmed order does not exist - creates new order).
 + **DELETE** `/order/cancel` - cancels current unfinished order of the token owner.
 + **GET** `/order/myOrder` - returns info and a list of ordered items from the current unfinished order of the token owner.
-+ **GET** `/order/confirm` - confirms current unfinished order of the token owner if there's enough available products. Order becomes 'finished'.
++ **POST** `/order/confirm` - confirms current unfinished order of the token owner if there's enough available products. Order becomes 'finished'.
 + **GET** `/order/{id}`  - takes order id as the path variable, returns info of the specified order if the token owner's role is Manager.
 + **GET** `/order/allOrders` - takes request parameters 'page'(index of the viewed page) and 'count'(number of items shown on one page), returns a list of orders if the token owner's role is Manager.
 + **DELETE** `/order/removeOrdered/{id}` - takes product id as the path variable, fully removes specified product from the current unfinished order of the token owner.
